@@ -1,0 +1,4 @@
+Create three SVG placeholders in this directory:
+1) sport.svg — abstract sporty gradient
+2) relax.svg — calm gradient with waves
+3) gym.svg — bold gradient with diagonals

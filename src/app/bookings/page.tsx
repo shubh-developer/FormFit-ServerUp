@@ -319,10 +319,10 @@ export default function BookingsPage() {
                       </td>
                       <td className="px-6 py-4 text-gray-300">{booking.service}</td>
                       <td className="px-6 py-4">
-                        {booking.dateTime ? (
+                        {(booking as any).dateTime ? (
                           <div>
-                            <div className="text-white">{new Date(booking.dateTime).toLocaleDateString()}</div>
-                            <div className="text-gray-400 text-sm">{new Date(booking.dateTime).toLocaleTimeString()}</div>
+                            <div className="text-white">{new Date((booking as any).dateTime).toLocaleDateString()}</div>
+                            <div className="text-gray-400 text-sm">{new Date((booking as any).dateTime).toLocaleTimeString()}</div>
                           </div>
                         ) : (
                           <div>
@@ -366,9 +366,9 @@ export default function BookingsPage() {
                                 contact: booking.contact,
                                 email: booking.email,
                                 service: booking.service,
-                                date: booking.dateTime ? new Date(booking.dateTime).toISOString().split('T')[0] : booking.date,
-                                time: booking.dateTime ? new Date(booking.dateTime).toTimeString().split(':').slice(0,2).join(':') : booking.time,
-                                photoUrl: booking.photoUrl || '',
+                                date: (booking as any).dateTime ? new Date((booking as any).dateTime).toISOString().split('T')[0] : booking.date,
+                                time: (booking as any).dateTime ? new Date((booking as any).dateTime).toTimeString().split(':').slice(0,2).join(':') : booking.time,
+                                photoUrl: (booking as any).photoUrl || '',
                                 status: booking.status,
                                 payment: booking.payment,
                                 amount: booking.amount

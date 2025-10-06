@@ -321,7 +321,7 @@ export default function Home() {
                   </span>
                 </div>
                 <blockquote className="text-[#2C3E50] mb-6 leading-relaxed text-lg italic font-medium">
-                  &ldquo;{feedback.comment}&rdquo;
+                  &quot;{feedback.comment}&quot;
                 </blockquote>
                 <div className="flex items-center pt-4 border-t border-gray-100">
                   <div className="w-14 h-14 bg-gradient-to-br from-[#2980B9] to-[#2ECC71] rounded-full flex items-center justify-center mr-4 shadow-lg">
@@ -526,7 +526,7 @@ export default function Home() {
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                   <div className="absolute bottom-4 left-4 text-white">
                     <h3 className="text-xl font-bold">Group Fitness 👯♀️</h3>
-                    <p className="text-sm opacity-90">Women's fitness & stretching</p>
+                    <p className="text-sm opacity-90">Women&apos;s fitness & stretching</p>
                   </div>
                 </div>
               </div>

@@ -445,9 +445,9 @@ export default function OffersPage() {
                       method: 'POST',
                       headers: { 'Content-Type': 'application/json' },
                       body: JSON.stringify({
-                        title: sanitizedTitle,
-                        discount: sanitizedDiscount,
-                        code: sanitizedCode,
+                        title: formData.title,
+                        discount: formData.discount,
+                        code: formData.code,
                         validUntil: formData.validUntil,
                         status: formData.status
                       })

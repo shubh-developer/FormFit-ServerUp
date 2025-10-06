@@ -32,8 +32,8 @@ export async function GET(request: NextRequest) {
     const offset = (page - 1) * limit;
 
     // Build query conditions
-    let whereConditions = [];
-    let queryParams = [];
+    const whereConditions = [];
+    const queryParams = [];
     let paramCount = 1;
 
     if (search) {
@@ -84,7 +84,7 @@ export async function GET(request: NextRequest) {
       LIMIT $${paramCount} OFFSET $${paramCount + 1}
     `, [...queryParams, limit, offset]);
 
-    const users = usersResult.rows.map(user => ({
+    const users = usersResult.rows.map((user: any) => ({
       id: user.id,
       name: user.name,
       email: user.email,

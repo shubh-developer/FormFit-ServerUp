@@ -240,10 +240,15 @@ export default function MasterDashboard() {
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="text-gray-300 text-sm">Total Reviews</p>
-                  <p className="text-3xl font-bold text-purple-400">{stats.totalFeedback}</p>
+                  <p className="text-gray-300 text-sm">Total Revenue</p>
+                  <p className="text-3xl font-bold text-green-400">
+                    ₹{recentBookings.reduce((total, booking: any) => {
+                      const amount = parseFloat(booking.amount) || 0;
+                      return total + amount;
+                    }, 0).toFixed(2)}
+                  </p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-purple-400" />
+                <TrendingUp className="h-8 w-8 text-green-400" />
               </div>
             </div>
           </div>
@@ -325,7 +330,7 @@ export default function MasterDashboard() {
                       <p className="text-gray-400 text-sm mt-1">{booking.service}</p>
                     </div>
                     <div className="text-right">
-                      <p className="text-white font-semibold">₹{booking.amount}</p>
+                      <p className="text-white font-semibold">₹{parseFloat(booking.amount) || 0}</p>
                       <p className="text-gray-400 text-sm">
                         {new Date(booking.booking_date).toLocaleDateString()}
                       </p>

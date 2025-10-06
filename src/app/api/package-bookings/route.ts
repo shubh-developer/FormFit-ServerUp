@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/database';
 
 // In-memory storage as fallback
-let packageBookingsStore: any[] = [
+const packageBookingsStore: any[] = [
   {
     id: 1,
     name: 'Alice Johnson',

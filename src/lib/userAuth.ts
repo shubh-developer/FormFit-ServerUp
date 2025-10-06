@@ -38,16 +38,7 @@ export function getUserTokenFromRequest(request: NextRequest): string | null {
     return authHeader.substring(7);
   }
   
-  // Check session-based authentication
-  const { SessionManager } = require('./session');
-  const sessionId = SessionManager.getSessionId(request, 'client');
-  if (sessionId) {
-    const session = SessionManager.getSession(sessionId);
-    if (session && session.userType === 'client') {
-      return session.token;
-    }
-  }
-  
+  // Skip session-based authentication for now to avoid async issues
   return null;
 }
 

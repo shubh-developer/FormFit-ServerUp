@@ -190,9 +190,7 @@ const Navbar = () => {
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
                     isActive(item.href)
                       ? 'text-[#1565C0] bg-blue-50'
-                      : item.admin 
-                        ? 'text-[#FF7043] hover:text-[#FF5722] hover:bg-orange-50'
-                        : item.icon === 'login'
+                      : item.icon === 'login'
                         ? 'text-[#2ECC71] hover:text-[#27AE60] hover:bg-green-50'
                         : item.icon === 'register'
                         ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'

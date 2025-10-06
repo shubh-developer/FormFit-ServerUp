@@ -22,7 +22,113 @@ interface BookingEmailData {
   bookingId: number;
 }
 
-export async function sendBookingConfirmation(booking: any, serviceName: string, oilName: string): Promise<boolean> {
+export async function sendBookingConfirmation(to: string, bookingData: any): Promise<boolean> {
+  try {
+    const mailOptions = {
+      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || 'formafit503@gmail.com',
+      to: to,
+      subject: '🎉 Booking Submitted - Under Review - FormaFit',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Booking Under Review</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .booking-details { background: white; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .detail-row { display: flex; justify-content: space-between; margin: 10px 0; padding: 8px 0; border-bottom: 1px solid #eee; }
+            .detail-label { font-weight: bold; color: #555; }
+            .detail-value { color: #333; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .contact-info { background: #e3f2fd; padding: 15px; border-radius: 8px; margin: 20px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>📋 Booking Under Review!</h1>
+              <p>Thank you for choosing FormaFit</p>
+            </div>
+            
+            <div class="content">
+              <p>Dear <strong>${bookingData.name}</strong>,</p>
+              
+              <p>Your massage booking has been successfully submitted and is currently under review. We will confirm your appointment shortly and send you a confirmation email once approved.</p>
+              
+              <div class="booking-details">
+                <h3>📋 Booking Details</h3>
+                <div class="detail-row">
+                  <span class="detail-label">Booking ID:</span>
+                  <span class="detail-value">#${bookingData.bookingId}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Service:</span>
+                  <span class="detail-value">${bookingData.service}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Date & Time:</span>
+                  <span class="detail-value">${bookingData.date} at ${bookingData.time}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Address:</span>
+                  <span class="detail-value">${bookingData.address}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Contact:</span>
+                  <span class="detail-value">${bookingData.contact}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Oil Type:</span>
+                  <span class="detail-value">${bookingData.oilType}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Price:</span>
+                  <span class="detail-value">₹${bookingData.amount}</span>
+                </div>
+              </div>
+              
+              <div class="contact-info">
+                <h4>📞 Need assistance?</h4>
+                <p>If you have any questions or need to make changes, please contact us:</p>
+                <p><strong>Phone:</strong> +91 7875671417</p>
+                <p><strong>WhatsApp:</strong> +91 7875671417</p>
+              </div>
+              
+              <h4>✨ What happens next:</h4>
+              <ul>
+                <li>We will review your booking within 2-4 hours</li>
+                <li>You will receive a confirmation email once approved</li>
+                <li>Our certified therapist will contact you before the appointment</li>
+                <li>Payment can be made after the session</li>
+              </ul>
+              
+              <div class="footer">
+                <p>Thank you for choosing FormaFit!</p>
+                <p>We will confirm your booking soon.</p>
+                <hr style="margin: 20px 0;">
+                <p><small>This is an automated email. Please do not reply to this address.</small></p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('❌ Error sending booking confirmation email:', error);
+    return false;
+  }
+}
+
+export async function sendBookingConfirmationOld(booking: any, serviceName: string, oilName: string): Promise<boolean> {
   try {
     const mailOptions = {
       from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'your-email@gmail.com',

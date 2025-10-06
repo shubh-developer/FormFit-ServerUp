@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { query } from '@/lib/database';
 
 // In-memory storage as fallback
-let bookingsStore: any[] = [
+const bookingsStore: any[] = [
   {
     id: 1,
     name: 'John Doe',
@@ -25,7 +25,7 @@ export async function GET() {
     if (result.rows && result.rows.length > 0) {
       return NextResponse.json({
         success: true,
-        bookings: result.rows.map(row => ({
+        bookings: result.rows.map((row: any) => ({
           id: row.id,
           name: row.name,
           contact: row.contact,
@@ -76,14 +76,27 @@ export async function POST(request: NextRequest) {
     const data = JSON.parse(body);
     console.log('📋 Parsed booking data:', data);
     
-    const { name, contact, email, service, date, time, status, payment, amount, packageId } = data;
+    const { name, contact, email, service, date, time, status, payment, amount, packageId, serviceType, dateTime, fitnessService } = data;
+
+    // Handle different booking types
+    const bookingService = service || serviceType || fitnessService || 'Unknown Service';
+    const bookingDate = date || (dateTime ? new Date(dateTime).toISOString().split('T')[0] : null);
+    const bookingTime = time || (dateTime ? new Date(dateTime).toTimeString().split(' ')[0].substring(0, 5) : null);
 
     // Validation
-    if (!name || !contact || !email || !service || !date || !time) {
-      console.log('❌ Validation failed: Missing required fields');
+    if (!name || !contact || !email || !bookingService || !bookingDate || !bookingTime) {
+      const missing = [];
+      if (!name) missing.push('name');
+      if (!contact) missing.push('contact');
+      if (!email) missing.push('email');
+      if (!bookingService) missing.push('service');
+      if (!bookingDate) missing.push('date');
+      if (!bookingTime) missing.push('time');
+      
+      console.log('❌ Validation failed: Missing required fields:', missing.join(', '));
       return NextResponse.json({
         success: false,
-        message: 'All required fields must be filled'
+        message: `Missing required fields: ${missing.join(', ')}`
       }, { status: 400 });
     }
 
@@ -101,9 +114,9 @@ export async function POST(request: NextRequest) {
       name: name.trim(),
       contact: contact.replace(/[^0-9]/g, ''),
       email: email.toLowerCase().trim(),
-      service: service.trim(),
-      date,
-      time,
+      service: bookingService.trim(),
+      date: bookingDate,
+      time: bookingTime,
       status: status || 'Pending',
       payment: payment || 'Pending',
       amount: amount || 999,
@@ -116,24 +129,17 @@ export async function POST(request: NextRequest) {
     try {
       // Insert into existing bookings table with correct column names
       const dbResult = await query(`
-        INSERT INTO bookings (name, contact, email, address, date_of_birth, height, weight, blood_group, service_type, oil_type, date_time, injury_note, pain_areas, is_urgent, payment_status, status, amount, created_at, updated_at)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14, $15, $16, $17, NOW(), NOW())
+        INSERT INTO bookings (name, contact, email, address, service_type, oil_type, date_time, payment_status, status, amount)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
         RETURNING id
       `, [
         newBooking.name,
         newBooking.contact, 
         newBooking.email,
-        data.address || 'Not provided',
-        data.dateOfBirth || null,
-        data.height || null,
-        data.weight || null,
-        data.bloodGroup || null,
+        data.address || 'Home address',
         newBooking.service,
         data.oilType || 'ayurvedic-herbal',
         `${newBooking.date} ${newBooking.time}`,
-        data.injuryNote || null,
-        JSON.stringify(data.painAreas || []),
-        data.isUrgent || false,
         newBooking.payment,
         newBooking.status,
         newBooking.amount
@@ -145,8 +151,46 @@ export async function POST(request: NextRequest) {
       
       dbSaved = true;
       console.log('✅ BOOKING SAVED TO DATABASE:', newBooking.id);
+      
+      // Send confirmation email
+      try {
+        console.log('📧 Attempting to send email to:', newBooking.email);
+        const emailResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/notifications/email`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            to: newBooking.email,
+            subject: 'Booking Confirmation - FormaFit Therapy',
+            type: 'booking_confirmation',
+            bookingData: {
+              name: newBooking.name,
+              service: newBooking.service,
+              date: newBooking.date,
+              time: newBooking.time,
+              bookingId: newBooking.id,
+              address: data.address || 'Home address',
+              contact: newBooking.contact,
+              oilType: data.oilType || data.nutritionGuide || 'Standard',
+              amount: newBooking.amount
+            }
+          })
+        });
+        
+        const emailResult = await emailResponse.json();
+        console.log('📧 Email API response:', emailResult);
+        
+        if (emailResult.success) {
+          console.log('✅ Confirmation email sent successfully');
+        } else {
+          console.error('❌ Email API returned error:', emailResult.message);
+        }
+      } catch (emailError) {
+        console.error('❌ Email sending failed:', emailError);
+      }
     } catch (dbError) {
       console.error('❌ DATABASE ERROR:', dbError);
+      console.error('❌ Error details:', dbError instanceof Error ? dbError.message : 'Unknown error');
+      console.error('❌ Error code:', (dbError as any).code);
     }
 
     // Always save to memory as backup

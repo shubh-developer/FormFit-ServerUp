@@ -114,7 +114,7 @@ const FitnessBookingForm = () => {
       dateTime: selectedDate,
       isUrgent,
       nutritionGuide,
-      amount: currentService.price + (isUrgent ? 200 : 0) + nutritionFee,
+      amount: (currentService?.price || 0) + (isUrgent ? 200 : 0) + nutritionFee,
       paymentStatus: 'pending' as const,
       serviceType: 'fitness-training',
       fitnessService: data.serviceType,
@@ -122,7 +122,7 @@ const FitnessBookingForm = () => {
 
     createBookingMutation.mutate(bookingData, {
       onSuccess: (result) => {
-        addBooking({ ...data, dateTime: selectedDate });
+        addBooking({ ...data, dateTime: selectedDate, oilType: 'therapist-choice' as const });
         showToast(result.message || 'Fitness training booking submitted successfully!', 'success');
         
         setTimeout(() => {

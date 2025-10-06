@@ -512,11 +512,11 @@ const BookingForm = () => {
                 )}
                 <div className="flex justify-between items-center py-2 border-b border-orange-200">
                   <span className="text-gray-700 font-medium">Oil:</span>
-                  <span className="font-semibold text-gray-900">{currentOil.name}</span>
+                  <span className="font-semibold text-gray-900">{currentOil?.name}</span>
                 </div>
                 <div className="flex justify-between items-center py-2 border-b border-orange-200">
                   <span className="text-gray-700 font-medium">Duration:</span>
-                  <span className="font-semibold text-gray-900">{currentService.duration}</span>
+                  <span className="font-semibold text-gray-900">{currentService?.duration}</span>
                 </div>
                 {isUrgent && (
                   <div className="flex justify-between items-center py-2 border-b border-orange-200">

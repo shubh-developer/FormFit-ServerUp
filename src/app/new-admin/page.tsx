@@ -328,11 +328,11 @@ export default function NewAdminPage() {
                                 fullName: admin.fullName,
                                 email: admin.email,
                                 password: '',
-                                contactNumber: admin.contactNumber || '',
-                                address: admin.address || '',
-                                photoUrl: admin.photoUrl || '',
-                                panCard: admin.panCard || '',
-                                aadharCard: admin.aadharCard || '',
+                                contactNumber: (admin as any).contactNumber || '',
+                                address: (admin as any).address || '',
+                                photoUrl: (admin as any).photoUrl || '',
+                                panCard: (admin as any).panCard || '',
+                                aadharCard: (admin as any).aadharCard || '',
                                 role: admin.role
                               });
                               setShowEditForm(true);

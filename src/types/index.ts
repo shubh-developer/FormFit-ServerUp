@@ -69,7 +69,14 @@ export type ServiceType =
   | 'lower-body'
   | 'head-massage'
   | 'injury-therapy'
-  | 'full-body-stretching';
+  | 'full-body-stretching'
+  | 'personal-training'
+  | 'strength-training'
+  | 'cardio-fitness'
+  | 'flexibility-mobility'
+  | 'weight-loss'
+  | 'functional-training'
+  | 'muscle-gain';
 
 export type OilType = 
   | 'ayurvedic-herbal'

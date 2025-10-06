@@ -63,7 +63,7 @@ export async function POST(request: NextRequest) {
     console.error('Create master admin error:', error);
     
     // Check if it's a database connection error
-    if (error.message?.includes('connect') || error.code === 'ECONNREFUSED') {
+    if (error instanceof Error && (error.message?.includes('connect') || (error as any).code === 'ECONNREFUSED')) {
       return NextResponse.json({
         success: false,
         message: 'Database connection failed. Please check if PostgreSQL is running.',
@@ -72,7 +72,7 @@ export async function POST(request: NextRequest) {
     
     return NextResponse.json({
       success: false,
-      message: `Database error: ${error.message}`,
+      message: `Database error: ${error instanceof Error ? error.message : 'Unknown error'}`,
     }, { status: 500 });
   }
 }

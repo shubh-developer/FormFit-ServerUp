@@ -60,7 +60,7 @@ export async function PATCH(
 
     // Send email notification based on status
     try {
-      let emailStatus = validatedData.status;
+      let emailStatus: string = validatedData.status;
       if (validatedData.status === 'booked') emailStatus = 'confirmed';
       
       await sendBookingStatusUpdate(

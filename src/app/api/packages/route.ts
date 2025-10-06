@@ -68,7 +68,7 @@ export async function GET() {
 
     return NextResponse.json({
       success: true,
-      packages: result.rows.map(row => ({
+      packages: result.rows.map((row: any) => ({
         id: row.id,
         package_type: row.package_type,
         title: row.title,

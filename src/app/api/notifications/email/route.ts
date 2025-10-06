@@ -13,6 +13,40 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
+    if (type === 'booking_confirmation') {
+      const { to, subject, bookingData } = body;
+      
+      if (!to || !bookingData) {
+        return NextResponse.json({
+          success: false,
+          message: 'Missing required fields for booking confirmation',
+        }, { status: 400 });
+      }
+
+      try {
+        const { sendBookingConfirmation } = await import('@/lib/email');
+        const emailSent = await sendBookingConfirmation(to, bookingData);
+        
+        if (emailSent) {
+          return NextResponse.json({
+            success: true,
+            message: 'Booking confirmation email sent successfully',
+          });
+        } else {
+          return NextResponse.json({
+            success: false,
+            message: 'Failed to send booking confirmation email',
+          }, { status: 500 });
+        }
+      } catch (error) {
+        console.error('Error sending booking confirmation:', error);
+        return NextResponse.json({
+          success: false,
+          message: 'Failed to send booking confirmation email',
+        }, { status: 500 });
+      }
+    }
+    
     if (type === 'booking_status_update') {
       if (!newStatus) {
         return NextResponse.json({

@@ -7,6 +7,9 @@ import { useState, useEffect } from 'react';
 import { Menu, X, LogOut, UserPlus,LogIn } from 'lucide-react';
 import { userSession } from '@/lib/userAuth';
 import { adminSession } from '@/lib/adminAuth';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faRegistered } from '@fortawesome/free-regular-svg-icons';
+
 
 
 const Navbar = () => {
@@ -65,7 +68,7 @@ const Navbar = () => {
 
   if (!mounted) {
     return (
-      <nav className="sticky top-0 z-50">
+      <nav className="sticky top-0 z-50 ">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center h-16">
             <Link href="/" className="flex items-center hover:scale-105 transition-transform">
@@ -247,7 +250,7 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-md border-t border-white/20">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3  backdrop-blur-md border-t border-white/20">
               {navItems.map((item) => {
                 if (item.showWhenLoggedIn && !isUserLoggedIn) return null;
                 if (item.showWhenLoggedOut && isUserLoggedIn) return null;
@@ -267,7 +270,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.icon === 'login' ? <LogIn className="w-7 h-7 text-gray-800" />: item.icon === 'register' ? <img src="/icons/register.png" className="w-8 h-8" alt="Register" /> : null}
+                    {item.icon === 'login' ? <LogIn className="w-7 h-7 text-gray-800" />: item.icon === 'register' ? <FontAwesomeIcon icon={faRegistered} className="text-blue-500 w-full  h-full " />: null}  {/*Register  icon created but its not looking well if you want you can change in futue  */} 
                     {item.icon !== 'login' && item.icon !== 'register' && item.label}
                   </Link>
                 );

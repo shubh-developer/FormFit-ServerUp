@@ -56,5 +56,17 @@
     "tailwindcss": "^4",
     "tsx": "^4.20.3",
     "typescript": "^5"
-  }
+  },
+  "description": "A comprehensive massage booking and management system built with Next.js, TypeScript, and PostgreSQL.",
+  "main": "add-amount-column.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shubh-developer/FormFit-ServerUp.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shubh-developer/FormFit-ServerUp/issues"
+  },
+  "homepage": "https://github.com/shubh-developer/FormFit-ServerUp#readme"
 }

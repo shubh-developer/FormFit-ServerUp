@@ -4,9 +4,10 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, LogOut, UserPlus } from 'lucide-react';
+import { Menu, X, LogOut, UserPlus,LogIn } from 'lucide-react';
 import { userSession } from '@/lib/userAuth';
 import { adminSession } from '@/lib/adminAuth';
+
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -55,7 +56,7 @@ const Navbar = () => {
     { href: '/packages', label: 'Packages' },
     { href: '/about', label: 'About' },
     { href: '/inquiry', label: 'Contact' },
-    { href: '/login', label: 'Login', client: true, showWhenLoggedOut: true, icon: 'login' },
+    { href: '/login', label: 'Loginnn', client: true, showWhenLoggedOut: true, icon: 'login' },
     { href: '/register', label: 'Register', client: true, showWhenLoggedOut: true, icon: 'register' },
     { href: '/user-dashboard', label: 'My Profile', client: true, showWhenLoggedIn: true },
   ];
@@ -266,7 +267,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.icon === 'login' ? <img src="/user.svg" className="w-8 h-8" alt="Login" /> : item.icon === 'register' ? <img src="/icons/register.png" className="w-8 h-8" alt="Register" /> : null}
+                    {item.icon === 'login' ? <LogIn className="w-7 h-7 text-gray-800" />: item.icon === 'register' ? <img src="/icons/register.png" className="w-8 h-8" alt="Register" /> : null}
                     {item.icon !== 'login' && item.icon !== 'register' && item.label}
                   </Link>
                 );

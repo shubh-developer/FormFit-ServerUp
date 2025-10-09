@@ -60,7 +60,7 @@ const Navbar = () => {
     { href: '/about', label: 'About' },
     { href: '/inquiry', label: 'Contact' },
     { href: '/login', label: 'Loginnn', client: true, showWhenLoggedOut: true, icon: 'login' },
-    { href: '/register', label: 'Register', client: true, showWhenLoggedOut: true, icon: 'register' },
+   // { href: '/register', label: 'Register', client: true, showWhenLoggedOut: true, icon: 'register' },
     { href: '/user-dashboard', label: 'My Profile', client: true, showWhenLoggedIn: true },
   ];
 
@@ -101,11 +101,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center hover:scale-105 transition-transform">
             <Image
-              src="/forma-fit-logo.jpg"
+              src="/FormaFit Logo with Running Figure.png"
               alt="FormaFit Logo"
               width={270}
               height={48}
-              className="h-12 w-auto rounded-xl object-cover border-2 border-white shadow-lg"
+              className="h-25 w-auto -ml-3 mt-5"
               priority
             />
           </Link>
@@ -270,7 +270,7 @@ const Navbar = () => {
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.icon === 'login' ? <LogIn className="w-7 h-7 text-gray-800" />: item.icon === 'register' ? <FontAwesomeIcon icon={faRegistered} className="text-blue-500 w-full  h-full " />: null}  {/*Register  icon created but its not looking well if you want you can change in futue  */} 
+                    {item.icon === 'login' ? <UserPlus className="w-7 h-7 text-gray-800" />: item.icon === 'register' ? <FontAwesomeIcon icon={faRegistered} className="text-blue-500 w-full  h-full " />: null}  {/*Register  icon created but its not looking well if you want you can change in futue  */} 
                     {item.icon !== 'login' && item.icon !== 'register' && item.label}
                   </Link>
                 );

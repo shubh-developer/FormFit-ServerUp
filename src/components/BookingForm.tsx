@@ -159,9 +159,10 @@ const BookingForm = () => {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 min-h-screen" suppressHydrationWarning>
-      <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8">
-        <h2 className="text-3xl font-light text-white mb-6 text-center tracking-wide">Book Your Appointment</h2>
+    <div className="max-w-7xl mx-auto -p-23 min-h-screen" suppressHydrationWarning>
+      <div className="bg-white/10 backdrop-blur-xl rounded-2xl sm:rounded-3xl shadow-xl sm:shadow-2xl border border-white/10 p-4 sm:p-5 lg:p-8 max-w-full lg:max-w-5xl mx-auto">
+
+        <h2 className="text-3xl  text-white mb-6 text-center tracking-wide ">Book Your Appointment</h2>
         
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
@@ -431,7 +432,8 @@ const BookingForm = () => {
               </div>
 
               {/* Pain Areas */}
-              <div className="border-2 border-red-100 rounded-lg p-6 bg-red-50">
+              <div className="border-2 border-red-100 rounded-md sm:rounded-lg p-3 sm:p-5 md:p-6 lg:p-8 xl:p-10 bg-red-50">
+
                 <PainAreaSelector
                   onPainAreasChange={setPainAreas}
                   selectedPainAreas={painAreas}

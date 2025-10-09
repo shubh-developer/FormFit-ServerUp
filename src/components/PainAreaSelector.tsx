@@ -58,7 +58,7 @@ const PainAreaSelector = ({ onPainAreasChange, selectedPainAreas = [] }: PainAre
   };
 
   return (
-    <div className="space-y-4 border-2 border-indigo-100 rounded-lg p-6 bg-indigo-50">
+    <div className="space-y-4 border-2 border-indigo-100 rounded-lg p-4 sm:p-6 md:p-8 bg-indigo-50">
       <h3 className="text-lg font-semibold text-gray-900 flex items-center">
         <span className="text-indigo-600 mr-2">🎯</span>
         Select Pain Areas (Optional)
@@ -84,8 +84,8 @@ const PainAreaSelector = ({ onPainAreasChange, selectedPainAreas = [] }: PainAre
               </label>
               
               {isSelected && painArea && (
-                <div className="ml-6 space-y-2">
-                  <div>
+                <div className="ml-3 flex flex-col md:flex gap-4 items-start">
+                  <div className="w-full md:w-1/5">
                     <label className="block text-xs text-gray-600 mb-1">Pain Intensity (1-5)</label>
                     <select
                       value={painArea.intensity}
@@ -101,7 +101,7 @@ const PainAreaSelector = ({ onPainAreasChange, selectedPainAreas = [] }: PainAre
                     </select>
                   </div>
                   
-                  <div>
+                  <div className="w-full md:w-1/2">
                     <label className="block text-xs text-gray-600 mb-1">Description (Optional)</label>
                     <textarea
                       value={painArea.description || ''}

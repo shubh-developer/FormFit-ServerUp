@@ -129,8 +129,8 @@ export async function POST(request: NextRequest) {
     try {
       // Insert into existing bookings table with correct column names
       const dbResult = await query(`
-        INSERT INTO bookings (name, contact, email, address, service_type, oil_type, date_time, payment_status, status, amount)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
+        INSERT INTO bookings (name, contact, email, address, service_type, oil_type, date_time, payment_status, status, amount, created_at, updated_at)
+        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         RETURNING id
       `, [
         newBooking.name,
@@ -142,7 +142,9 @@ export async function POST(request: NextRequest) {
         `${newBooking.date} ${newBooking.time}`,
         newBooking.payment,
         newBooking.status,
-        newBooking.amount
+        newBooking.amount,
+        new Date().toISOString(),
+        new Date().toISOString()
       ]);
       
       if (dbResult.rows && dbResult.rows[0]) {

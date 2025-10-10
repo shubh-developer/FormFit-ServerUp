@@ -1,17 +1,25 @@
 import { Pool, PoolClient } from 'pg';
 
-// Database configuration
-const dbConfig = {
+// Database configuration - Use DATABASE_URL if available (for Vercel/Supabase), otherwise use individual env vars
+const dbConfig = process.env.DATABASE_URL ? {
+  connectionString: process.env.DATABASE_URL,
+  ssl: process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  // Connection pool settings
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 10000,
+  maxUses: 7500,
+} : {
   host: process.env.DB_HOST || 'localhost',
   port: parseInt(process.env.DB_PORT || '5432'),
   database: process.env.DB_NAME || 'home_massage_service',
   user: process.env.DB_USER || 'postgres',
   password: process.env.DB_PASSWORD || 'root',
   // Connection pool settings
-  max: 20, // Maximum number of clients in the pool
-  idleTimeoutMillis: 30000, // Close idle clients after 30 seconds
-  connectionTimeoutMillis: 2000, // Return an error after 2 seconds if connection could not be established
-  maxUses: 7500, // Close (and replace) a connection after it has been used 7500 times
+  max: 20,
+  idleTimeoutMillis: 30000,
+  connectionTimeoutMillis: 2000,
+  maxUses: 7500,
 };
 
 // Create a connection pool
@@ -27,12 +35,13 @@ pool.on('error', (err) => {
 export async function testConnection(): Promise<boolean> {
   try {
     const client = await pool.connect();
-    await client.query('SELECT NOW()');
+    const result = await client.query('SELECT NOW()');
     client.release();
-    // Database connection successful
+    console.log('✅ Database connection successful:', result.rows[0]);
     return true;
   } catch (error) {
     console.error('❌ Database connection failed:', error);
+    console.error('❌ Config:', process.env.DATABASE_URL ? 'Using DATABASE_URL' : 'Using individual env vars');
     return false;
   }
 }
@@ -73,14 +82,16 @@ export async function query(text: string, params?: unknown[]): Promise<any> {
       return param;
     });
     
-    // Log query for security monitoring (in production, this should be more sophisticated)
-    // Database query executed
+    console.log('🔍 Executing query:', text.substring(0, 100) + '...');
     
     const result = await client.query(text, sanitizedParams);
+    console.log('✅ Query successful, rows affected:', result.rowCount);
     return result;
   } catch (error) {
-    console.error('[DB] Query error:', error);
-    throw new Error('Database operation failed');
+    console.error('❌ [DB] Query error:', error);
+    console.error('❌ Query text:', text);
+    console.error('❌ Query params:', params);
+    throw error;
   } finally {
     client.release();
   }

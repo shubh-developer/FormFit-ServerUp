@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { query } from '@/lib/database';
+import { query, testConnection } from '@/lib/database';
 
 // In-memory storage as fallback
 const packageBookingsStore: any[] = [
@@ -20,16 +20,70 @@ const packageBookingsStore: any[] = [
 ];
 
 export async function GET() {
-  return NextResponse.json({
-    success: true,
-    bookings: packageBookingsStore
-  });
+  try {
+    // Test database connection
+    const dbConnected = await testConnection();
+    console.log('🔍 Database connection status:', dbConnected);
+    
+    // Try to fetch from database
+    if (dbConnected) {
+      try {
+        const dbResult = await query(`
+          SELECT * FROM bookings 
+          WHERE service_type LIKE 'Package:%' 
+          ORDER BY created_at DESC
+        `);
+        
+        const dbBookings = dbResult.rows.map((row: any) => ({
+          id: row.id,
+          name: row.name,
+          contact: row.contact,
+          email: row.email,
+          packageName: row.service_type.replace('Package: ', ''),
+          packageId: row.oil_type === 'package-booking' ? 'weekly-3' : row.oil_type,
+          date: row.date_time ? row.date_time.split(' ')[0] : '',
+          time: row.date_time ? row.date_time.split(' ')[1] : '',
+          status: row.status || 'Pending',
+          payment: row.payment_status || 'Pending',
+          amount: row.amount || 2599,
+          createdAt: row.created_at
+        }));
+        
+        console.log('✅ Fetched', dbBookings.length, 'package bookings from database');
+        
+        return NextResponse.json({
+          success: true,
+          bookings: dbBookings.length > 0 ? dbBookings : packageBookingsStore,
+          source: dbBookings.length > 0 ? 'database' : 'memory'
+        });
+      } catch (dbError) {
+        console.error('❌ Database fetch failed:', dbError);
+      }
+    }
+    
+    // Fallback to memory store
+    return NextResponse.json({
+      success: true,
+      bookings: packageBookingsStore,
+      source: 'memory'
+    });
+  } catch (error) {
+    console.error('❌ GET package bookings error:', error);
+    return NextResponse.json({
+      success: true,
+      bookings: packageBookingsStore,
+      source: 'memory'
+    });
+  }
 }
 
 export async function POST(request: NextRequest) {
   try {
+    console.log('📦 Package booking API called');
+    
     const body = await request.text();
     if (!body) {
+      console.error('❌ Request body is empty');
       return NextResponse.json({
         success: false,
         message: 'Request body is empty'
@@ -37,9 +91,11 @@ export async function POST(request: NextRequest) {
     }
     
     const { name, contact, email, packageId, packageName, date, time, status, payment, amount } = JSON.parse(body);
+    console.log('📝 Received data:', { name, contact, email, packageId, packageName, date, time, status, payment, amount });
 
     // Validation
     if (!name || !contact || !email || !packageId || !date || !time) {
+      console.error('❌ Missing required fields');
       return NextResponse.json({
         success: false,
         message: 'All required fields must be filled'
@@ -47,6 +103,7 @@ export async function POST(request: NextRequest) {
     }
 
     if (contact.replace(/[^0-9]/g, '').length !== 10) {
+      console.error('❌ Invalid contact number length');
       return NextResponse.json({
         success: false,
         message: 'Contact number must be exactly 10 digits'
@@ -69,44 +126,47 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     };
 
+    console.log('💾 Saving to memory store...');
     packageBookingsStore.unshift(newBooking);
 
-    // Also try to save to database
-    try {
-      await query(`
-        CREATE TABLE IF NOT EXISTS package_bookings (
-          id SERIAL PRIMARY KEY,
-          name VARCHAR(255) NOT NULL,
-          contact VARCHAR(15) NOT NULL,
-          email VARCHAR(255) NOT NULL,
-          package_id VARCHAR(50) NOT NULL,
-          package_name VARCHAR(255) NOT NULL,
-          date VARCHAR(20) NOT NULL,
-          time VARCHAR(20) NOT NULL,
-          status VARCHAR(20) DEFAULT 'Pending',
-          payment VARCHAR(20) DEFAULT 'Pending',
-          amount INTEGER DEFAULT 2599,
-          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        )
-      `);
-      
-      await query(`
-        INSERT INTO package_bookings (name, contact, email, package_id, package_name, date, time, status, payment, amount)
-        VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)
-      `, [newBooking.name, newBooking.contact, newBooking.email, newBooking.packageId, newBooking.packageName, newBooking.date, newBooking.time, newBooking.status, newBooking.payment, newBooking.amount]);
-    } catch (dbError) {
-      console.log('Database save failed, using in-memory only:', dbError);
+    // Save to main bookings table - THIS IS CRITICAL
+    console.log('💾 Saving to database...');
+    const dbResult = await query(`
+      INSERT INTO bookings (name, contact, email, address, service_type, oil_type, date_time, payment_status, status, amount, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+      RETURNING id
+    `, [
+      newBooking.name,
+      newBooking.contact,
+      newBooking.email,
+      'Package booking',
+      `Package: ${newBooking.packageName}`,
+      'package-booking',
+      `${newBooking.date} ${newBooking.time}`,
+      newBooking.payment,
+      newBooking.status,
+      newBooking.amount,
+      new Date().toISOString(),
+      new Date().toISOString()
+    ]);
+    
+    if (dbResult.rows && dbResult.rows[0]) {
+      newBooking.id = dbResult.rows[0].id;
+      console.log('✅ Package booking saved to database with ID:', newBooking.id);
+    } else {
+      console.error('❌ No ID returned from database insert');
     }
 
     return NextResponse.json({
       success: true,
-      message: 'Package booking created successfully'
+      message: 'Package booking created successfully',
+      bookingId: newBooking.id
     });
   } catch (error) {
-    console.error('Package booking creation error:', error);
+    console.error('❌ Package booking creation error:', error);
     return NextResponse.json({
       success: false,
-      message: 'Failed to create package booking'
+      message: 'Failed to create package booking: ' + (error as Error).message
     }, { status: 500 });
   }
 }

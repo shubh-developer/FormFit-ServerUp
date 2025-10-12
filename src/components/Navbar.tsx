@@ -14,6 +14,7 @@ const Navbar = () => {
   const [user, setUser] = useState<any>(null);
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [mounted, setMounted] = useState(false);
+  const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -66,24 +67,24 @@ const Navbar = () => {
     return (
       <nav className="sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex justify-between items-center h-16">
+          <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center hover:scale-105 transition-transform">
               <Image
-                src="/forma-fit-logo.jpg"
+                src="/images/forma-fit-logo.png"
                 alt="FormaFit Logo"
-                width={270}
+                width={400}
                 height={48}
-                className="h-12 w-auto rounded-xl object-cover border-2 border-white shadow-lg"
+                className="h-16 w-auto rounded-xl object-cover shadow-lg"
                 priority
               />
             </Link>
             <div className="hidden md:flex items-center space-x-8">
-              <Link href="/" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">Home</Link>
-              <Link href="/services" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">Services</Link>
-              <Link href="/book" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">Book Now</Link>
-              <Link href="/packages" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">Packages</Link>
-              <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">About</Link>
-              <Link href="/inquiry" className="px-3 py-2 rounded-md text-sm font-medium text-yellow-400">Contact</Link>
+              <Link href="/" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">Home</Link>
+              <Link href="/services" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">Services</Link>
+              <Link href="/book" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">Book Now</Link>
+              <Link href="/packages" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">Packages</Link>
+              <Link href="/about" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">About</Link>
+              <Link href="/inquiry" className="px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9]">Contact</Link>
             </div>
           </div>
         </div>
@@ -97,11 +98,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center hover:scale-105 transition-transform">
             <Image
-              src="/forma-fit-logo.jpg"
+              src="/images/forma-fit-logo.png"
               alt="FormaFit Logo"
-              width={270}
+              width={400}
               height={48}
-              className="h-12 w-auto rounded-xl object-cover border-2 border-white shadow-lg"
+              className="h-18 w-auto rounded-xl object-cover shadow-lg"
               priority
             />
           </Link>
@@ -115,7 +116,7 @@ const Navbar = () => {
                 return (
                   <div key={item.href} className="relative group">
                     <button
-                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-yellow-400"
+                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE]"
                     >
                       {item.label}
                     </button>
@@ -159,7 +160,7 @@ const Navbar = () => {
                 return (
                   <div key={item.href} className="relative group">
                     <button
-                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-yellow-400"
+                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE]"
                     >
                       {item.label}
                     </button>
@@ -189,14 +190,14 @@ const Navbar = () => {
                   href={item.href}
                   className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
                     isActive(item.href)
-                      ? 'text-[#1565C0] bg-blue-50'
+                      ? 'text-[#E8E8E9]'
                       : item.icon === 'login'
-                        ? 'text-[#2ECC71] hover:text-[#27AE60] hover:bg-green-50'
+                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
                         : item.icon === 'register'
-                        ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
+                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
                         : item.client
-                        ? 'text-[#2ECC71] hover:text-[#27AE60] hover:bg-green-50'
-                        : 'text-yellow-400'
+                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
+                        : 'text-[#BBBBBE] hover:text-[#E8E8E9]'
                   }`}
                 >
                   {item.icon === 'login' ? <img src="/images/user-6-48.png" className="w-7 h-7" alt="Login" /> : item.icon === 'register' }
@@ -209,7 +210,7 @@ const Navbar = () => {
             
             {isUserLoggedIn && user && (
               <div className="relative group">
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-[#2E7D32] hover:text-[#1B5E20] hover:bg-green-50 transition-colors">
+                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <span>{user.name}</span>
                 </button>
@@ -246,10 +247,60 @@ const Navbar = () => {
 
         {isMenuOpen && (
           <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white/90 backdrop-blur-md border-t border-white/20">
+            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-white/20">
               {navItems.map((item) => {
                 if (item.showWhenLoggedIn && !isUserLoggedIn) return null;
                 if (item.showWhenLoggedOut && isUserLoggedIn) return null;
+                
+                if (item.href === '/services') {
+                  return (
+                    <div key={item.href}>
+                      <button
+                        onClick={() => setExpandedMenu(expandedMenu === 'services' ? null : 'services')}
+                        className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors flex items-center justify-between"
+                      >
+                        Services
+                        <span className={`transform transition-transform ${expandedMenu === 'services' ? 'rotate-90' : ''}`}>›</span>
+                      </button>
+                      {expandedMenu === 'services' && (
+                        <div className="pl-4">
+                          <Link
+                            href="/services"
+                            className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            Spa Services
+                          </Link>
+                          <button
+                            onClick={() => setExpandedMenu(expandedMenu === 'fitness' ? null : 'fitness')}
+                            className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors flex items-center justify-between"
+                          >
+                            Fitness Training
+                            <span className={`transform transition-transform ${expandedMenu === 'fitness' ? 'rotate-90' : ''}`}>›</span>
+                          </button>
+                          {expandedMenu === 'fitness' && (
+                            <div className="pl-4">
+                              <Link
+                                href="/fitness?type=online"
+                                className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                              >
+                                Online Training
+                              </Link>
+                              <Link
+                                href="/fitness?type=offline"
+                                className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
+                                onClick={() => setIsMenuOpen(false)}
+                              >
+                                Offline Training
+                              </Link>
+                            </div>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  );
+                }
                 
                 return (
                   <Link
@@ -257,16 +308,16 @@ const Navbar = () => {
                     href={item.href}
                     className={`block px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center ${
                       isActive(item.href)
-                        ? 'text-[#2980B9] bg-blue-50'
+                        ? 'text-[#E8E8E9]'
                         : item.icon === 'login'
-                        ? 'text-[#2ECC71] hover:text-[#27AE60] hover:bg-green-50'
+                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
                         : item.icon === 'register'
-                        ? 'text-blue-600 hover:text-blue-700 hover:bg-blue-50'
-                        : 'text-gray-700 hover:text-[#F1C40F] hover:bg-white/10'
+                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
+                        : 'text-[#BBBBBE] hover:text-[#E8E8E9]'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.icon === 'login' ? <img src="/user.svg" className="w-8 h-8" alt="Login" /> : item.icon === 'register' ? <img src="/icons/register.png" className="w-8 h-8" alt="Register" /> : null}
+                    {item.icon === 'login' ? <img src="/images/user-6-48.png" className="w-8 h-8" alt="Login" /> : null}
                     {item.icon !== 'login' && item.icon !== 'register' && item.label}
                   </Link>
                 );
@@ -275,13 +326,13 @@ const Navbar = () => {
 
               
               {isUserLoggedIn && user && (
-                <div className="border-t border-gray-200 pt-2 mt-2">
-                  <div className="px-3 py-2 text-sm text-gray-600">
+                <div className="border-t border-white/20 pt-2 mt-2">
+                  <div className="px-3 py-2 text-sm text-[#BBBBBE]">
                     Welcome, {user.name}
                   </div>
                   <Link
                     href="/user-dashboard"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-[#2E7D32] hover:text-[#1B5E20] hover:bg-green-50 transition-colors"
+                    className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     View Profile
@@ -291,7 +342,7 @@ const Navbar = () => {
                       handleLogout();
                       setIsMenuOpen(false);
                     }}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#FF7043] hover:text-[#FF5722] hover:bg-orange-50 transition-colors"
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
                   >
                     Logout
                   </button>

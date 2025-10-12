@@ -24,9 +24,9 @@ export default function AboutPage() {
           </div>
           <div className="relative z-10 grid grid-cols-1 lg:grid-cols-2 gap-8">
             <div className="text-center">
-              <div className="w-48 h-48 bg-white rounded-full mx-auto mb-6 flex items-center justify-center p-2 shadow-lg">
+              <div className="w-48 h-48 bg-black rounded-full mx-auto mb-6 flex items-center justify-center p-4 shadow-lg border-4 border-orange-500">
                 <img 
-                  src="/forma-fit-logo.jpg" 
+                  src="/images/forma-fit-logo.png" 
                   alt="FormaFit Logo" 
                   className="w-full h-full object-contain rounded-full"
                 />

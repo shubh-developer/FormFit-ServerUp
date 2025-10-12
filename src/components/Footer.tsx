@@ -10,9 +10,9 @@ const Footer = () => {
           {/* Company Info */}
           <div className="col-span-1 md:col-span-1">
             <div className="flex items-center space-x-3 mb-4">
-              <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center p-1 shadow-lg">
+              <div className="w-16 h-16 bg-black rounded-full flex items-center justify-center p-1 shadow-lg border-2 border-orange-500">
                 <Image
-                  src="/forma-fit-logo.jpg"
+                  src="/images/forma-fit-logo.png"
                   alt="FormaFit Logo"
                   width={56}
                   height={56}
@@ -26,11 +26,13 @@ const Footer = () => {
             </p>
             <div className="flex space-x-4">
               <a
-                href="tel:+919876543210"
+                href="https://wa.me/917776948229?text=Hi%2C%20I%20would%20like%20to%20inquire%20about%20your%20massage%20therapy%20and%20fitness%20training%20services.%20Could%20you%20please%20provide%20more%20information%3F"
+                target="_blank"
+                rel="noopener noreferrer"
                 className="flex items-center space-x-2 bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
               >
                 <Phone size={16} />
-                <span className="text-sm font-medium">Call Now</span>
+                <span className="text-sm font-medium">WhatsApp</span>
               </a>
             </div>
           </div>
@@ -68,11 +70,11 @@ const Footer = () => {
             <div className="space-y-3">
               <div className="flex items-center space-x-3">
                 <Phone size={16} className="text-blue-400" />
-                <span className="text-gray-300">+91 7875671417</span>
+                <span className="text-gray-300">+91 7776948229</span>
               </div>
               <div className="flex items-center space-x-3">
                 <Mail size={16} className="text-blue-400" />
-                <span className="text-gray-300">formafit503@gmail.com</span>
+                <span className="text-gray-300">admin@formafit.co.in</span>
               </div>
               <div className="flex items-center space-x-3">
                 <MapPin size={16} className="text-blue-400" />

@@ -153,11 +153,11 @@ const InquiryForm = () => {
             <div className="space-y-2 text-sm text-green-700">
               <div className="flex items-center">
                 <Phone className="w-4 h-4 mr-2" />
-                <span>Call us: +91 7875671417</span>
+                <span>Call us: +91 7776948229</span>
               </div>
               <div className="flex items-center">
                 <MessageSquare className="w-4 h-4 mr-2" />
-                <span>WhatsApp: +91 7875671417</span>
+                <span>WhatsApp: +91 7776948229</span>
               </div>
               <div className="flex items-center">
                 <span className="w-4 h-4 mr-2">📍</span>

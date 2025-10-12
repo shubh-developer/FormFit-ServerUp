@@ -12,6 +12,9 @@ export default function Home() {
   const [currentSection, setCurrentSection] = useState(0);
   const [floatingElements, setFloatingElements] = useState<any[]>([]);
   const [currentTitle, setCurrentTitle] = useState('Our Wellness Experience 🌿');
+  const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
+  const [showAllGallery, setShowAllGallery] = useState(false);
+  const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
 
 
   useEffect(() => {
@@ -108,7 +111,7 @@ export default function Home() {
             muted
             loop 
             playsInline
-            className="w-full h-full object-cover opacity-60"
+            className="w-full h-full object-cover opacity-60 min-w-full min-h-full"
           >
             <source src="/videos/Formafit_demo_video.mp4" type="video/mp4" />
           </video>
@@ -136,32 +139,23 @@ export default function Home() {
         </div>
         
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center">
-            <div className="mb-8 mt-8">
-              <span className="inline-block bg-white/20 backdrop-blur-sm px-6 py-2 rounded-full text-sm font-medium mb-4">
-                🏆 Professional Home Massage Service
-              </span>
-            </div>
+          <div className="text-center pt-20 sm:pt-16 md:pt-8 lg:pt-0">
             
-            <h1 className="text-5xl md:text-7xl font-bold mb-8 leading-tight">
-              Professional
-              <br />
-              <span className="text-[#FFD600] drop-shadow-lg">
-                Fitness Trainer and Massage Therapists 💪
+            <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight px-2">
+              <span className="text-[#FF9100] drop-shadow-lg">
+               Professional Massage & Fitness Care<br /> Right at Your Home
               </span>
-              <br />
-              <span className="text-3xl md:text-4xl opacity-90">At Your Home</span>
             </h1>
             
-            <p className="text-xl md:text-2xl mb-12 opacity-90 max-w-4xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl lg:text-2xl mb-8 opacity-90 max-w-4xl mx-auto leading-relaxed px-4">
               Experience ultimate relaxation and wellness with our certified therapist and professional fitness trainer. 
               Transform your space into a sanctuary of healing, rejuvenation, and fitness excellence.
             </p>
             
-            <div className="flex flex-col sm:flex-row gap-6 justify-center mb-8">
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-16 px-4">
               <Link
                 href="/book"
-                className="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-semibold text-white bg-gradient-to-r from-[#FF1744] to-[#FFD600] hover:from-[#D50000] hover:to-[#FFC107] rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl font-heading"
+                className="group relative inline-flex items-center justify-center px-8 py-3 text-base sm:text-lg font-semibold text-white bg-gradient-to-r from-[#FF1744] to-[#FFD600] hover:from-[#D50000] hover:to-[#FFC107] rounded-2xl transition-all duration-300 transform hover:scale-105 shadow-2xl hover:shadow-3xl font-heading"
               >
                 <span className="relative z-10">Book Now</span>
                 <div className="absolute inset-0 bg-gradient-to-r from-[#FF5722] to-[#F9A825] rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -169,25 +163,29 @@ export default function Home() {
               
               <Link
                 href="/services"
-                className="group relative inline-flex items-center justify-center px-10 py-4 text-lg font-semibold border-2 border-white text-white hover:text-green-600 rounded-2xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
+                className="group relative inline-flex items-center justify-center px-8 py-3 text-base sm:text-lg font-semibold border-2 border-white text-white hover:text-green-600 rounded-2xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm"
               >
                 <span className="relative z-10">View Services</span>
                 <div className="absolute inset-0 bg-white rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
               </Link>
             </div>
             
-            <div className="flex items-center justify-center space-x-8 text-sm opacity-80 mb-12">
-              <div className="flex items-center space-x-2">
-                <Shield className="w-4 h-4" />
-                <span>Certified Personal Fitness Trainer & Certified Therapist</span>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 justify-items-center text-xs sm:text-sm opacity-90 mb-12 max-w-6xl mx-auto px-2">
+              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full text-center">
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Certified Fitness Trainer</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <MapPin className="w-4 h-4" />
-                <span>Home Service</span>
+              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full text-center">
+                <Shield className="w-3 h-3 sm:w-4 sm:h-4 text-blue-500 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Certified Therapist</span>
               </div>
-              <div className="flex items-center space-x-2">
-                <Star className="w-4 h-4" />
-                <span>5-Star Rated</span>
+              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full text-center">
+                <MapPin className="w-3 h-3 sm:w-4 sm:h-4 text-cyan-400 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">Home Service</span>
+              </div>
+              <div className="flex items-center space-x-2 bg-white/10 backdrop-blur-sm px-3 py-2 rounded-full text-center">
+                <Star className="w-3 h-3 sm:w-4 sm:h-4 text-yellow-400 flex-shrink-0" />
+                <span className="text-xs sm:text-sm">5-Star Rated</span>
               </div>
             </div>
             
@@ -197,7 +195,7 @@ export default function Home() {
             <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 animate-bounce">
               <div className="flex flex-col items-center text-white/70">
                 <span className="text-sm mb-2">Discover Our Story</span>
-                <ArrowDown className="w-6 h-6" />
+                <ArrowDown className="w-6 h-8" />
               </div>
             </div>
           </div>
@@ -207,7 +205,7 @@ export default function Home() {
       {/* Combined Background for Chapters 2 & 3 */}
       <div style={{backgroundImage: 'url(/images/dark_wallpaper.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
         {/* Chapter 2: Our Journey */}
-        <section className="story-section min-h-screen flex items-center py-20 relative overflow-hidden">
+        <section className="story-section min-h-screen flex items-center py-10 pb-5 relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16" style={{ transform: `translateY(${Math.max(0, (scrollY - 800) * 0.1)}px)` }}>
             <div className="inline-block mb-4">
@@ -224,7 +222,7 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 lg:gap-8">
+          <div className="hidden md:grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6 lg:gap-8">
             {[
               { icon: MapPin, title: 'Home Service', desc: 'No need to travel. We come to your home for maximum convenience and comfort.', color: '[#00BCD4]' },
               { icon: Award, title: 'Certified Therapist', desc: 'Professional therapist with 5+ years of experience and proper certifications.', color: '[#FF1744]' },
@@ -255,12 +253,39 @@ export default function Home() {
               </div>
             ))}
           </div>
+          
+          {/* Mobile Grid Cards */}
+          <div className="md:hidden grid grid-cols-2 gap-4 px-4">
+            {[
+              { icon: MapPin, title: 'Home Service', desc: 'No need to travel. We come to your home for maximum convenience and comfort.', color: '[#00BCD4]' },
+              { icon: Award, title: 'Certified Therapist', desc: 'Professional therapist with 5+ years of experience and proper certifications.', color: '[#FF1744]' },
+              { icon: Users, title: 'Certified Professional Trainer', desc: 'Expert fitness trainer with professional certifications for personalized training, weight loss & muscle building programs.', color: '[#FFD600]' },
+              { icon: Shield, title: 'Safe & Hygienic', desc: 'All equipment and oils are sanitized and safe for your health and wellness.', color: '[#00BCD4]' },
+              { icon: Star, title: 'Affordable Pricing', desc: 'Competitive rates with 10-20% lower than market prices for quality service.', color: '[#FF1744]' }
+            ].map((item, index) => (
+              <div 
+                key={index}
+                className={`text-center p-4 rounded-2xl bg-white shadow-lg border border-gray-100 min-h-[250px] ${index === 4 ? 'col-span-2 max-w-sm mx-auto' : ''}`}
+              >
+                <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 ${
+                  item.color === '[#00BCD4]' ? 'bg-gradient-to-br from-cyan-400 to-cyan-600' :
+                  item.color === '[#FF1744]' ? 'bg-gradient-to-br from-pink-500 to-pink-700' :
+                  item.color === '[#FFD600]' ? 'bg-gradient-to-br from-yellow-400 to-yellow-600' :
+                  'bg-gradient-to-br from-gray-400 to-gray-600'
+                }`}>
+                  <item.icon className="w-6 h-6 text-white" />
+                </div>
+                <h3 className="text-sm font-bold text-[#2C3E50] mb-2">{item.title === 'Certified Professional Trainer' ? 'Certified Professional Trainer 💪' : item.title}</h3>
+                <p className="text-gray-600 text-xs leading-relaxed">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
 
         {/* Chapter 3: The Experience */}
-        <section className="story-section min-h-screen flex items-center py-20 relative">
+        <section className="story-section min-h-screen flex items-center py-10 relative">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <div className="inline-block mb-4">
@@ -268,15 +293,15 @@ export default function Home() {
                 Chapter 3: The Experience
               </span>
             </div>
-            <h2 className="text-5xl font-bold text-white mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6 px-4 sm:px-0">
               Stories of <span className="bg-gradient-to-r from-yellow-400 to-white bg-clip-text text-transparent">Transformation</span>
             </h2>
-            <p className="text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed">
+            <p className="text-base sm:text-lg md:text-xl text-gray-200 max-w-3xl mx-auto leading-relaxed px-4 sm:px-0">
               Every session tells a story. Here are the authentic voices of those who found their sanctuary with us.
             </p>
           </div>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="hidden md:grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-0">
             {[
               {
                 id: 1,
@@ -300,7 +325,7 @@ export default function Home() {
                 created_at: "2024-01-10"
               }
             ].map((feedback) => (
-              <div key={feedback.id} className="group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 p-8">
+              <div key={feedback.id} className="group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto md:max-w-none">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex space-x-1">
                     {[...Array(5)].map((_, i) => (
@@ -320,25 +345,155 @@ export default function Home() {
                     {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
                   </span>
                 </div>
-                <blockquote className="text-[#2C3E50] mb-6 leading-relaxed text-lg italic font-medium">
+                <blockquote className="text-[#2C3E50] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base md:text-lg italic font-medium">
                   &quot;{feedback.comment}&quot;
                 </blockquote>
-                <div className="flex items-center pt-4 border-t border-gray-100">
-                  <div className="w-14 h-14 bg-gradient-to-br from-[#2980B9] to-[#2ECC71] rounded-full flex items-center justify-center mr-4 shadow-lg">
-                    <span className="text-white font-bold text-xl">
+                <div className="flex items-center pt-3 sm:pt-4 border-t border-gray-100">
+                  <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-[#2980B9] to-[#2ECC71] rounded-full flex items-center justify-center mr-3 sm:mr-4 shadow-lg flex-shrink-0">
+                    <span className="text-white font-bold text-sm sm:text-base md:text-xl">
                       {feedback.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
-                  <div className="flex-1">
-                    <p className="font-bold text-[#2C3E50] text-lg">{feedback.name}</p>
-                    <p className="text-gray-500 text-sm flex items-center">
-                      <span className="mr-2">✓ Verified Customer</span>
-                      <span>• {new Date(feedback.created_at).toLocaleDateString('en-IN')}</span>
+                  <div className="flex-1 min-w-0">
+                    <p className="font-bold text-[#2C3E50] text-sm sm:text-base md:text-lg truncate">{feedback.name}</p>
+                    <p className="text-gray-500 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center">
+                      <span className="mr-0 sm:mr-2">✓ Verified Customer</span>
+                      <span className="hidden sm:inline">•</span>
+                      <span className="sm:ml-2">{new Date(feedback.created_at).toLocaleDateString('en-IN')}</span>
                     </p>
                   </div>
                 </div>
               </div>
             ))}
+          </div>
+          
+          {/* Mobile Stacked Reviews */}
+          <div className="md:hidden relative h-80 px-4">
+            <div 
+              className="relative w-full h-full"
+              onTouchStart={(e) => {
+                const touch = e.touches[0];
+                e.currentTarget.dataset.startX = touch.clientX.toString();
+              }}
+              onTouchEnd={(e) => {
+                const startX = parseFloat(e.currentTarget.dataset.startX || '0');
+                const endX = e.changedTouches[0].clientX;
+                const diff = startX - endX;
+                
+                if (Math.abs(diff) > 50) {
+                  const reviews = [
+                    {
+                      id: 1,
+                      name: "Priya Sharma",
+                      rating: 5,
+                      comment: "Amazing massage therapy! The therapist was very professional and the home service was so convenient. I felt completely relaxed after the session.",
+                      created_at: "2024-01-15"
+                    },
+                    {
+                      id: 2,
+                      name: "Rajesh Kumar",
+                      rating: 5,
+                      comment: "Excellent fitness training session! The trainer was knowledgeable and created a perfect workout plan for my goals. Highly recommended!",
+                      created_at: "2024-01-12"
+                    },
+                    {
+                      id: 3,
+                      name: "Anita Patel",
+                      rating: 4,
+                      comment: "Great service and very professional. The massage helped with my back pain significantly. Will definitely book again.",
+                      created_at: "2024-01-10"
+                    }
+                  ];
+                  
+                  if (diff > 0 && currentReviewIndex < reviews.length - 1) {
+                    setCurrentReviewIndex(currentReviewIndex + 1);
+                  } else if (diff < 0 && currentReviewIndex > 0) {
+                    setCurrentReviewIndex(currentReviewIndex - 1);
+                  }
+                }
+              }}
+            >
+              {[
+                {
+                  id: 1,
+                  name: "Priya Sharma",
+                  rating: 5,
+                  comment: "Amazing massage therapy! The therapist was very professional and the home service was so convenient. I felt completely relaxed after the session.",
+                  created_at: "2024-01-15"
+                },
+                {
+                  id: 2,
+                  name: "Rajesh Kumar",
+                  rating: 5,
+                  comment: "Excellent fitness training session! The trainer was knowledgeable and created a perfect workout plan for my goals. Highly recommended!",
+                  created_at: "2024-01-12"
+                },
+                {
+                  id: 3,
+                  name: "Anita Patel",
+                  rating: 4,
+                  comment: "Great service and very professional. The massage helped with my back pain significantly. Will definitely book again.",
+                  created_at: "2024-01-10"
+                }
+              ].map((feedback, index) => {
+                const position = index - currentReviewIndex;
+                return (
+                  <div 
+                    key={feedback.id} 
+                    className="absolute w-[calc(100vw-2rem)] max-w-sm bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl border border-gray-100 p-8 transition-all duration-500 ease-out"
+                    style={{
+                      transform: `translateX(${position * 15}px) translateY(${position * 15}px) scale(${1 - Math.abs(position) * 0.08}) rotateZ(${position * 2}deg)`,
+                      zIndex: 10 - Math.abs(position),
+                      opacity: position === 0 ? 1 : 0.6,
+                      display: Math.abs(position) > 2 ? 'none' : 'block',
+                      boxShadow: position === 0 ? '0 25px 50px -12px rgba(0, 0, 0, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.05)' : '0 10px 25px -5px rgba(0, 0, 0, 0.1)'
+                    }}
+                  >
+                    <div className="flex items-center justify-between mb-6">
+                      <div className="flex space-x-1">
+                        {[...Array(5)].map((_, i) => (
+                          <Star 
+                            key={i} 
+                            className={`w-5 h-5 ${
+                              i < feedback.rating ? 'text-amber-400 fill-current drop-shadow-lg' : 'text-gray-200'
+                            }`} 
+                          />
+                        ))}
+                      </div>
+                      <span className={`px-3 py-1 text-xs font-bold rounded-full shadow-sm ${
+                        feedback.rating >= 4 ? 'bg-emerald-100 text-emerald-700 border border-emerald-200' :
+                        feedback.rating >= 3 ? 'bg-amber-100 text-amber-700 border border-amber-200' :
+                        'bg-red-100 text-red-700 border border-red-200'
+                      }`}>
+                        {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
+                      </span>
+                    </div>
+                    <blockquote className="text-gray-700 mb-6 leading-relaxed text-base italic font-medium relative">
+                      <span className="text-4xl text-gray-300 absolute -top-2 -left-2">&ldquo;</span>
+                      {feedback.comment}
+                      <span className="text-4xl text-gray-300 absolute -bottom-4 -right-2">&rdquo;</span>
+                    </blockquote>
+                    <div className="flex items-center pt-4 border-t border-gray-200">
+                      <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-lg flex-shrink-0">
+                        <span className="text-white font-bold text-lg">
+                          {feedback.name.charAt(0).toUpperCase()}
+                        </span>
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <p className="font-bold text-gray-800 text-base truncate">{feedback.name}</p>
+                        <p className="text-gray-500 text-sm flex items-center">
+                          <span className="inline-flex items-center mr-3">
+                            <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
+                            Verified Customer
+                          </span>
+                          <span>{new Date(feedback.created_at).toLocaleDateString('en-IN')}</span>
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
           </div>
           
           <div className="text-center mt-12 flex flex-col sm:flex-row gap-4 justify-center">
@@ -365,7 +520,7 @@ export default function Home() {
         <div className="absolute inset-0" style={{background: 'linear-gradient(135deg, rgba(63, 63, 63, 1), rgba(0, 0, 0, 1))'}}></div>
         
         {/* Gallery Section */}
-        <section className="story-section py-20 relative z-10">
+        <section className="story-section py-10 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-16">
             <h2 className="text-4xl font-bold text-white mb-6 transition-all duration-500">
@@ -377,8 +532,20 @@ export default function Home() {
           </div>
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            {/* First 4 cards always visible */}
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 md:cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 0;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className={`relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180`} style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(0) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Spa */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -408,8 +575,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 1;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(1) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Premium Oils */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -439,8 +617,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 2;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(2) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Expert Techniques */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -470,8 +659,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 3;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(3) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Aromatherapy */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -501,8 +701,20 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 md:col-span-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            {/* Desktop: Always show all cards */}
+            <div className="hidden md:block group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 md:col-span-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 4;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(4) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Complete Wellness */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -532,8 +744,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="hidden md:block group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 5;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(5) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Outdoor Workouts */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -563,8 +786,19 @@ export default function Home() {
               </div>
             </div>
             
-            <div className="group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2" style={{ perspective: '1000px' }}>
-              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d' }}>
+            <div className="hidden md:block group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 6;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(6) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Strength Training */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
                   <img 
@@ -594,12 +828,163 @@ export default function Home() {
               </div>
             </div>
             
+            {/* Mobile: Show with toggle */}
+            {showAllGallery && (
+              <div className="md:hidden group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 7;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(7) ? 'rotateY(180deg)' : ''}` }}>
+                {/* Front side - Complete Wellness */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+                  <img 
+                    src="https://images.unsplash.com/photo-1591343395082-e120087004b4?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" 
+                    alt="Relaxation and wellness" 
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-xl font-bold">Complete Wellness Experience</h3>
+                    <p className="text-sm opacity-90">Holistic approach to health and relaxation</p>
+                  </div>
+                </div>
+                {/* Back side - Senior Fitness */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                  <img 
+                    src="https://burst.shopifycdn.com/photos/women-reach-up.jpg?width=1200&format=pjpg&exif=0&iptc=0" 
+                    alt="Women fitness stretching exercise" 
+                    className="w-full h-64 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-xl font-bold">Group Fitness 👯♀️</h3>
+                    <p className="text-sm opacity-90">Women&apos;s fitness & stretching</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+            
+            {showAllGallery && (
+            <div className="md:hidden group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 8;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(8) ? 'rotateY(180deg)' : ''}` }}>
+                {/* Front side - Outdoor Workouts */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+                  <img 
+                    src="https://cdn-ilbapaf.nitrocdn.com/ZmMiMYiblsIwVjzNuftoXuWhTPTuQyyC/assets/images/optimized/rev-9e6f186/wod.guru/wp-content/uploads/2025/01/7Outdoor-Workout-Ideas-to-Keep-Your-Gym-Offer-Interesting-1024x640.jpg" 
+                    alt="Outdoor workout activities" 
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">Outdoor Workouts 🌳</h3>
+                    <p className="text-sm opacity-90">Fresh air fitness activities</p>
+                  </div>
+                </div>
+                {/* Back side - Premium Equipment */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                  <img 
+                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                    alt="Spa accessories" 
+                    className="w-full h-64 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">Premium Equipment</h3>
+                    <p className="text-sm opacity-90">Professional spa accessories</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+            
+            {showAllGallery && (
+            <div className="md:hidden group relative overflow-hidden rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 cursor-pointer" style={{ perspective: '1000px' }} onClick={() => {
+              const cardId = 9;
+              setFlippedCards(prev => {
+                const newSet = new Set(prev);
+                if (newSet.has(cardId)) {
+                  newSet.delete(cardId);
+                } else {
+                  newSet.add(cardId);
+                }
+                return newSet;
+              });
+            }}>
+              <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(9) ? 'rotateY(180deg)' : ''}` }}>
+                {/* Front side - Strength Training */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
+                  <img 
+                    src="https://images.unsplash.com/photo-1581009146145-b5ef050c2e1e?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                    alt="Strength training" 
+                    className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">Strength Training 💪</h3>
+                    <p className="text-sm opacity-90">Build muscle & power</p>
+                  </div>
+                </div>
+                {/* Back side - Yoga & Meditation */}
+                <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
+                  <img 
+                    src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
+                    alt="Yoga and meditation" 
+                    className="w-full h-64 object-cover"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-lg font-bold">Yoga & Meditation</h3>
+                    <p className="text-sm opacity-90">Mind-body wellness</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            )}
+            
+          </div>
+          
+          {/* Show More/Less Button - Mobile Only */}
+          <div className="text-center mt-8 md:hidden">
+            <button
+              onClick={() => setShowAllGallery(!showAllGallery)}
+              className="inline-flex items-center px-6 py-3 bg-white/10 hover:bg-white/20 text-white rounded-xl transition-all duration-300 transform hover:scale-105 backdrop-blur-sm border border-white/20"
+            >
+              {showAllGallery ? 'Show Less' : 'Show More'}
+              <svg 
+                className={`w-5 h-5 ml-2 transition-transform duration-300 ${showAllGallery ? 'rotate-180' : ''}`} 
+                fill="none" 
+                stroke="currentColor" 
+                viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
           </div>
         </div>
         </section>
 
         {/* Meet Your Therapist Section */}
-        <section className="story-section py-16 relative z-10 overflow-hidden">
+        <section className="story-section py-10 relative z-10 overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
             <div>
@@ -644,23 +1029,23 @@ export default function Home() {
                 <div className="absolute inset-0 bg-gradient-to-br from-[#26A69A]/10 to-[#1565C0]/10"></div>
               </div>
               <div className="relative text-center">
-                <div className="w-32 h-32 bg-white rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-white shadow-lg p-4">
+                <div className="w-32 h-32 bg-black rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-orange-500 shadow-lg p-4">
                   <Image
-                    src="/forma-fit-logo.jpg"
+                    src="/images/forma-fit-logo.png"
                     alt="FormaFit Logo"
                     width={96}
                     height={96}
                     className="w-full h-full object-contain rounded-full"
                   />
                 </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Professional Massage Therapist & Fitness Trainer</h3>
-                <p className="text-gray-600 mb-4">{THERAPIST_INFO.specialization}</p>
+                <h3 className="text-2xl font-bold text-white mb-2">Therapeutic Massage & Personal Fitness Training</h3>
+                <p className="text-white mb-4">{THERAPIST_INFO.specialization}</p>
                 <div className="flex justify-center space-x-1 mb-4">
                   {[...Array(5)].map((_, i) => (
                     <Star key={i} className="w-5 h-5 text-[#F1C40F] fill-current" />
                   ))}
                 </div>
-                <p className="text-sm text-gray-600">Rated 5.0 by 100+ clients</p>
+                <p className="text-sm text-white">Rated 5.0 by 100+ clients</p>
               </div>
             </div>
           </div>
@@ -669,7 +1054,7 @@ export default function Home() {
       </div>
 
       {/* CTA Section */}
-      <section className="py-16 bg-[#1A1A1A]">
+      <section className="py-10 bg-[#1A1A1A]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">
             Ready to Experience Ultimate Relaxation?
@@ -677,18 +1062,20 @@ export default function Home() {
           <p className="text-xl text-white/80 mb-8 max-w-2xl mx-auto">
             Book your appointment today and enjoy professional massage therapy in the comfort of your home.
           </p>
-          <div className="flex flex-col sm:flex-row gap-4 justify-center">
+          <div className="flex flex-row gap-3 sm:gap-4 justify-center">
             <Link
               href="/book"
-              className="bg-gradient-to-r from-[#FF1744] to-[#FFD600] hover:from-[#D50000] hover:to-[#FFC107] text-white px-8 py-4 rounded-lg text-lg font-semibold transition-colors"
+              className="bg-gradient-to-r from-[#FF1744] to-[#FFD600] hover:from-[#D50000] hover:to-[#FFC107] text-white px-4 py-3 sm:px-8 sm:py-4 rounded-lg text-sm sm:text-lg font-semibold transition-colors flex-1 sm:flex-none max-w-[140px] sm:max-w-none text-center"
             >
               Book Now
             </Link>
             <a
-              href="tel:+919876543210"
-              className="border-2 border-white text-white px-8 py-4 rounded-lg text-lg font-semibold hover:bg-white hover:text-green-600 transition-colors"
+              href="https://wa.me/917776948229?text=Hi%2C%20I%20would%20like%20to%20inquire%20about%20your%20massage%20therapy%20and%20fitness%20training%20services.%20Could%20you%20please%20provide%20more%20information%3F"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="border-2 border-white text-white px-4 py-3 sm:px-8 sm:py-4 rounded-lg text-sm sm:text-lg font-semibold hover:bg-white hover:text-green-600 transition-colors flex-1 sm:flex-none max-w-[140px] sm:max-w-none text-center"
             >
-              Call +91 7875671417
+              WhatsApp
             </a>
           </div>
         </div>

@@ -151,18 +151,24 @@ export async function initializeDatabase(): Promise<void> {
     await query(`
       CREATE TABLE IF NOT EXISTS feedback (
         id SERIAL PRIMARY KEY,
-        name VARCHAR(255) NOT NULL,
-        rating INTEGER NOT NULL CHECK (rating >= 1 AND rating <= 5),
-        comment TEXT NOT NULL,
-        booking_id INTEGER REFERENCES bookings(id) NOT NULL,
-        client_email VARCHAR(255) NOT NULL,
-        client_phone VARCHAR(15) NOT NULL,
+        name VARCHAR(255),
+        rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+        comment TEXT,
+        booking_id INTEGER REFERENCES bookings(id),
+        client_email VARCHAR(255),
+        client_phone VARCHAR(15),
         ip_address VARCHAR(45),
         user_agent TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        UNIQUE(booking_id)
+        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
       )
+    `);
+    
+    // Make booking_id nullable for simple reviews
+    await query(`
+      ALTER TABLE feedback 
+      ALTER COLUMN booking_id DROP NOT NULL,
+      DROP CONSTRAINT IF EXISTS feedback_booking_id_key
     `);
 
     // Create feedback security audit table

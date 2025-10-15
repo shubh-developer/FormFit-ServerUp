@@ -6,6 +6,7 @@ import { SERVICES, THERAPIST_INFO } from '@/lib/data';
 import { Clock, MapPin, Star, Shield, Users, Award, ArrowDown } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
+import SimpleReviewModal from '@/components/SimpleReviewModal';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -15,6 +16,7 @@ export default function Home() {
   const [currentReviewIndex, setCurrentReviewIndex] = useState(0);
   const [showAllGallery, setShowAllGallery] = useState(false);
   const [flippedCards, setFlippedCards] = useState<Set<number>>(new Set());
+  const [isReviewModalOpen, setIsReviewModalOpen] = useState(false);
 
 
   useEffect(() => {
@@ -62,18 +64,53 @@ export default function Home() {
   }, []);
 
   // Fetch recent feedback
-  const { data: recentFeedback } = useQuery({
+  const { data: recentFeedback, refetch } = useQuery({
     queryKey: ['recent-feedback'],
     queryFn: async () => {
-      const response = await fetch('/api/feedback');
-      const result = await response.json();
-      if (result.success) {
-        return result.feedback.slice(0, 6); // Show only 6 recent feedback
+      try {
+        const response = await fetch('/api/feedback');
+        const result = await response.json();
+        
+        if (result.success && result.feedback) {
+          // Sort by created_at and return latest 6
+          return result.feedback
+            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+            .slice(0, 6);
+        }
+        return [];
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        return [];
       }
-      return [];
     },
-    refetchInterval: 30000, // Refresh every 30 seconds
+    refetchInterval: 30000,
   });
+
+  const handleReviewSubmit = async (reviewData: any) => {
+    try {
+      const response = await fetch('/api/feedback', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(reviewData),
+      });
+      
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          refetch();
+          return; // Success handled by modal
+        } else {
+          throw new Error(result.message || 'Failed to submit review');
+        }
+      } else {
+        const result = await response.json();
+        throw new Error(result.message || 'Failed to submit review');
+      }
+    } catch (error) {
+      console.error('Review submission error:', error);
+      throw error; // Let modal handle the error
+    }
+  };
 
 
 
@@ -301,30 +338,9 @@ export default function Home() {
             </p>
           </div>
           
-          <div className="hidden md:grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-0">
-            {[
-              {
-                id: 1,
-                name: "Priya Sharma",
-                rating: 5,
-                comment: "Amazing massage therapy! The therapist was very professional and the home service was so convenient. I felt completely relaxed after the session.",
-                created_at: "2024-01-15"
-              },
-              {
-                id: 2,
-                name: "Rajesh Kumar",
-                rating: 5,
-                comment: "Excellent fitness training session! The trainer was knowledgeable and created a perfect workout plan for my goals. Highly recommended!",
-                created_at: "2024-01-12"
-              },
-              {
-                id: 3,
-                name: "Anita Patel",
-                rating: 4,
-                comment: "Great service and very professional. The massage helped with my back pain significantly. Will definitely book again.",
-                created_at: "2024-01-10"
-              }
-            ].map((feedback) => (
+          {recentFeedback && recentFeedback.length > 0 ? (
+            <div className="hidden md:grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-0">
+              {recentFeedback.slice(0, 3).map((feedback) => (
               <div key={feedback.id} className="group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto md:max-w-none">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex space-x-1">
@@ -345,7 +361,9 @@ export default function Home() {
                     {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
                   </span>
                 </div>
-                <blockquote className="text-[#2C3E50] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base md:text-lg italic font-medium">
+                <blockquote className={`text-[#2C3E50] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base md:text-lg italic font-medium ${
+                  feedback.comment.length > 100 ? 'max-h-24 overflow-y-auto scrollbar-hide' : ''
+                }`}>
                   &quot;{feedback.comment}&quot;
                 </blockquote>
                 <div className="flex items-center pt-3 sm:pt-4 border-t border-gray-100">
@@ -362,15 +380,21 @@ export default function Home() {
                       <span className="sm:ml-2">{new Date(feedback.created_at).toLocaleDateString('en-IN')}</span>
                     </p>
                   </div>
+                  </div>
                 </div>
-              </div>
-            ))}
-          </div>
+              ))}
+            </div>
+          ) : (
+            <div className="text-center py-12">
+              <p className="text-white/70 text-lg">No customer reviews available yet.</p>
+              <p className="text-white/50 text-sm mt-2">Be the first to share your experience!</p>
+            </div>
+          )}
           
           {/* Mobile Stacked Reviews */}
-          <div className="md:hidden relative h-80 px-4">
+          <div className="md:hidden relative h-80 flex justify-center items-center px-4">
             <div 
-              className="relative w-full h-full"
+              className="relative w-full max-w-sm h-full"
               onTouchStart={(e) => {
                 const touch = e.touches[0];
                 e.currentTarget.dataset.startX = touch.clientX.toString();
@@ -381,31 +405,8 @@ export default function Home() {
                 const diff = startX - endX;
                 
                 if (Math.abs(diff) > 50) {
-                  const reviews = [
-                    {
-                      id: 1,
-                      name: "Priya Sharma",
-                      rating: 5,
-                      comment: "Amazing massage therapy! The therapist was very professional and the home service was so convenient. I felt completely relaxed after the session.",
-                      created_at: "2024-01-15"
-                    },
-                    {
-                      id: 2,
-                      name: "Rajesh Kumar",
-                      rating: 5,
-                      comment: "Excellent fitness training session! The trainer was knowledgeable and created a perfect workout plan for my goals. Highly recommended!",
-                      created_at: "2024-01-12"
-                    },
-                    {
-                      id: 3,
-                      name: "Anita Patel",
-                      rating: 4,
-                      comment: "Great service and very professional. The massage helped with my back pain significantly. Will definitely book again.",
-                      created_at: "2024-01-10"
-                    }
-                  ];
-                  
-                  if (diff > 0 && currentReviewIndex < reviews.length - 1) {
+                  const reviewsData = recentFeedback && recentFeedback.length > 0 ? recentFeedback : [];
+                  if (diff > 0 && currentReviewIndex < reviewsData.length - 1) {
                     setCurrentReviewIndex(currentReviewIndex + 1);
                   } else if (diff < 0 && currentReviewIndex > 0) {
                     setCurrentReviewIndex(currentReviewIndex - 1);
@@ -413,36 +414,14 @@ export default function Home() {
                 }
               }}
             >
-              {[
-                {
-                  id: 1,
-                  name: "Priya Sharma",
-                  rating: 5,
-                  comment: "Amazing massage therapy! The therapist was very professional and the home service was so convenient. I felt completely relaxed after the session.",
-                  created_at: "2024-01-15"
-                },
-                {
-                  id: 2,
-                  name: "Rajesh Kumar",
-                  rating: 5,
-                  comment: "Excellent fitness training session! The trainer was knowledgeable and created a perfect workout plan for my goals. Highly recommended!",
-                  created_at: "2024-01-12"
-                },
-                {
-                  id: 3,
-                  name: "Anita Patel",
-                  rating: 4,
-                  comment: "Great service and very professional. The massage helped with my back pain significantly. Will definitely book again.",
-                  created_at: "2024-01-10"
-                }
-              ].map((feedback, index) => {
+              {recentFeedback && recentFeedback.length > 0 ? recentFeedback.map((feedback, index) => {
                 const position = index - currentReviewIndex;
                 return (
                   <div 
                     key={feedback.id} 
-                    className="absolute w-[calc(100vw-2rem)] max-w-sm bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl border border-gray-100 p-8 transition-all duration-500 ease-out"
+                    className="absolute w-full bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl border border-gray-100 p-6 transition-all duration-500 ease-out left-1/2 top-1/2"
                     style={{
-                      transform: `translateX(${position * 15}px) translateY(${position * 15}px) scale(${1 - Math.abs(position) * 0.08}) rotateZ(${position * 2}deg)`,
+                      transform: `translate(-50%, -50%) translateX(${position * 15}px) translateY(${position * 15}px) scale(${1 - Math.abs(position) * 0.08}) rotateZ(${position * 2}deg)`,
                       zIndex: 10 - Math.abs(position),
                       opacity: position === 0 ? 1 : 0.6,
                       display: Math.abs(position) > 2 ? 'none' : 'block',
@@ -468,10 +447,14 @@ export default function Home() {
                         {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
                       </span>
                     </div>
-                    <blockquote className="text-gray-700 mb-6 leading-relaxed text-base italic font-medium relative">
-                      <span className="text-4xl text-gray-300 absolute -top-2 -left-2">&ldquo;</span>
-                      {feedback.comment}
-                      <span className="text-4xl text-gray-300 absolute -bottom-4 -right-2">&rdquo;</span>
+                    <blockquote className={`text-gray-700 mb-6 leading-relaxed text-base italic font-medium relative ${
+                      feedback.comment.length > 100 ? 'max-h-32 overflow-y-auto scrollbar-hide' : ''
+                    }`}>
+                      <span className="text-4xl text-gray-300 absolute -top-2 -left-2 z-10">&ldquo;</span>
+                      <div className="pl-6 pr-6">
+                        {feedback.comment}
+                      </div>
+                      <span className="text-4xl text-gray-300 absolute -bottom-4 -right-2 z-10">&rdquo;</span>
                     </blockquote>
                     <div className="flex items-center pt-4 border-t border-gray-200">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-lg flex-shrink-0">
@@ -492,18 +475,25 @@ export default function Home() {
                     </div>
                   </div>
                 );
-              })}
+              }) : (
+                <div className="absolute inset-0 flex items-center justify-center">
+                  <div className="text-center text-white/70">
+                    <p className="text-lg mb-2">No reviews available yet</p>
+                    <p className="text-sm">Be the first to share your experience!</p>
+                  </div>
+                </div>
+              )}
             </div>
           </div>
           
           <div className="text-center mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-            <Link
-              href="/feedback"
+            <button
+              onClick={() => setIsReviewModalOpen(true)}
               className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#2980B9] to-[#2ECC71] text-white rounded-xl hover:from-[#1A5276] hover:to-[#27AE60] transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg"
             >
-              Submit Your Feedback
+              Write a Review
               <Star className="w-5 h-5 ml-2" />
-            </Link>
+            </button>
             <Link
               href="/feedback"
               className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-xl hover:bg-white hover:text-[#b7d251] transition-all duration-300 transform hover:scale-105 font-semibold"
@@ -1080,6 +1070,13 @@ export default function Home() {
           </div>
         </div>
       </section>
+
+      {/* Review Modal */}
+      <SimpleReviewModal
+        isOpen={isReviewModalOpen}
+        onClose={() => setIsReviewModalOpen(false)}
+        onSubmit={handleReviewSubmit}
+      />
     </div>
   );
 }

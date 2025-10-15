@@ -225,13 +225,28 @@ export async function POST(request: NextRequest) {
 
 export async function GET() {
   try {
+    console.log('Fetching feedback from database...');
+    
     // Fetch all feedback from database with booking information
     const result = await query(`
-      SELECT f.*, b.service_type, b.date_time as session_date
+      SELECT 
+        f.id,
+        f.name,
+        f.rating,
+        f.comment,
+        f.booking_id,
+        f.client_email,
+        f.client_phone,
+        f.created_at,
+        f.updated_at,
+        b.service_type,
+        b.date_time as session_date
       FROM feedback f
       LEFT JOIN bookings b ON f.booking_id = b.id
       ORDER BY f.created_at DESC
     `);
+
+    console.log(`Found ${result.rows.length} feedback entries`);
 
     return NextResponse.json({
       success: true,
@@ -239,6 +254,87 @@ export async function GET() {
     });
   } catch (error) {
     console.error('Get Feedback API Error:', error);
+    console.error('Error details:', {
+      message: error.message,
+      stack: error.stack,
+      name: error.name
+    });
+    
+    return NextResponse.json({
+      success: false,
+      message: 'Internal server error',
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    }, { status: 500 });
+  }
+}
+
+// Simple review schema for non-booking reviews
+const simpleReviewSchema = z.object({
+  name: z.string()
+    .min(2, 'Name is required (minimum 2 characters)')
+    .max(50, 'Name too long (maximum 50 characters)')
+    .regex(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
+  rating: z.number().min(1, 'Rating is required').max(5, 'Invalid rating'),
+  comment: z.string()
+    .min(10, 'Review is required (minimum 10 characters)')
+    .max(500, 'Review too long (maximum 500 characters)'),
+});
+
+// Handle simple reviews (without booking requirement)
+export async function PUT(request: NextRequest) {
+  try {
+    const body = await request.json();
+    
+    // Validate the request body for simple review
+    const validatedData = simpleReviewSchema.parse(body);
+    
+    // Rate limiting
+    const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
+    
+    if (!checkRateLimit(`simple_review_${clientIP}`, 3, 300000)) { // 3 reviews per 5 minutes
+      return NextResponse.json({
+        success: false,
+        message: 'Too many review submissions. Please try again later.',
+      }, { status: 429 });
+    }
+    
+    // Sanitize inputs
+    const sanitizedData = {
+      name: validatedData.name.trim().replace(/\s+/g, ' '),
+      rating: Math.max(1, Math.min(5, Math.floor(validatedData.rating))),
+      comment: validatedData.comment.trim().replace(/\s+/g, ' '),
+    };
+    
+    // Insert simple review into feedback table (without booking_id)
+    const result = await query(`
+      INSERT INTO feedback (name, rating, comment, client_email, ip_address, user_agent)
+      VALUES ($1, $2, $3, $4, $5, $6)
+      RETURNING *
+    `, [
+      sanitizedData.name,
+      sanitizedData.rating,
+      sanitizedData.comment,
+      null, // No email for simple reviews
+      clientIP,
+      request.headers.get('user-agent') || 'unknown'
+    ]);
+
+    return NextResponse.json({
+      success: true,
+      message: 'Thank you for your review!',
+      review: result.rows[0],
+    }, { status: 201 });
+
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      return NextResponse.json({
+        success: false,
+        message: 'Validation failed',
+        errors: error.issues,
+      }, { status: 400 });
+    }
+
+    console.error('Simple Review API Error:', error);
     return NextResponse.json({
       success: false,
       message: 'Internal server error',

@@ -45,6 +45,16 @@ body {
   background: #94a3b8;
 }
 
+/* Hide scrollbar for review content */
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 /* Smooth transitions */
 * {
   transition: all 0.2s ease-in-out;

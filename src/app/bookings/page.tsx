@@ -28,7 +28,8 @@ import {
   CheckCircle,
   XCircle,
   Plus,
-  Phone
+  Phone,
+  Package
 } from 'lucide-react';
 
 export default function BookingsPage() {
@@ -122,9 +123,10 @@ export default function BookingsPage() {
   const sidebarItems = [
     { icon: Home, label: 'Dashboard', onClick: () => router.push('/master-dashboard') },
     { icon: Users, label: 'Bookings', active: true },
-    { icon: MessageSquare, label: 'Inquiries', onClick: () => router.push('/dashboard') },
-    { icon: Star, label: 'Feedback', onClick: () => router.push('/dashboard') },
-    { icon: UserPlus, label: 'New Admin', onClick: () => window.location.href = '/new-admin' },
+    { icon: MessageSquare, label: 'Inquiries', onClick: () => router.push('/inquiries') },
+    { icon: Star, label: 'Feedback', onClick: () => router.push('/master-feedback') },
+    { icon: Package, label: 'Packages', onClick: () => router.push('/master-packages') },
+    { icon: UserPlus, label: 'New Admin', onClick: () => router.push('/new-admin') },
     { icon: Tag, label: 'Offers', onClick: () => router.push('/offers') },
     { icon: BarChart3, label: 'Analytics' },
     { icon: Database, label: 'Database' },
@@ -154,7 +156,7 @@ export default function BookingsPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex" suppressHydrationWarning>
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col`}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-white/10">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-3">
@@ -170,45 +172,47 @@ export default function BookingsPage() {
           </button>
         </div>
 
-        <nav className="mt-8 px-4">
-          <div className="space-y-2">
-            {sidebarItems.map((item, index) => (
-              <button
-                key={index}
-                onClick={item.onClick}
-                className={`w-full flex items-center px-4 py-3 text-left rounded-xl transition-colors ${
-                  item.active 
-                    ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' 
-                    : 'text-gray-300 hover:bg-white/10 hover:text-white'
-                }`}
-              >
-                <item.icon className="h-5 w-5 mr-3" />
-                {item.label}
-              </button>
-            ))}
-          </div>
-        </nav>
-
-        <div className="absolute bottom-4 left-4 right-4">
-          <div className="bg-white/10 rounded-xl p-4 border border-white/20">
-            <div className="flex items-center mb-2">
-              <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center mr-3">
-                <span className="text-white text-sm font-bold">
-                  {adminInfo?.fullName?.charAt(0)}
-                </span>
-              </div>
-              <div>
-                <p className="text-white text-sm font-medium">{adminInfo?.fullName}</p>
-                <p className="text-gray-400 text-xs">{adminInfo?.role}</p>
-              </div>
+        <div className="flex-1 flex flex-col min-h-0">
+          <nav className="flex-1 mt-8 px-4 overflow-y-auto">
+            <div className="space-y-2 pb-4">
+              {sidebarItems.map((item, index) => (
+                <button
+                  key={index}
+                  onClick={item.onClick}
+                  className={`w-full flex items-center px-4 py-3 text-left rounded-xl transition-colors ${
+                    item.active 
+                      ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30' 
+                      : 'text-gray-300 hover:bg-white/10 hover:text-white'
+                  }`}
+                >
+                  <item.icon className="h-5 w-5 mr-3" />
+                  {item.label}
+                </button>
+              ))}
             </div>
-            <button
-              onClick={handleLogout}
-              className="w-full flex items-center justify-center px-3 py-2 bg-red-600/20 text-red-300 hover:bg-red-600/30 rounded-lg transition-colors border border-red-500/30 text-sm"
-            >
-              <LogOut className="w-4 h-4 mr-2" />
-              Logout
-            </button>
+          </nav>
+
+          <div className="flex-shrink-0 p-4 border-t border-white/10">
+            <div className="bg-white/10 rounded-xl p-3 border border-white/20">
+              <div className="flex items-center mb-2">
+                <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center mr-3 flex-shrink-0">
+                  <span className="text-white text-sm font-bold">
+                    {adminInfo?.fullName?.charAt(0)}
+                  </span>
+                </div>
+                <div className="min-w-0 flex-1">
+                  <p className="text-white text-sm font-medium truncate">{adminInfo?.fullName}</p>
+                  <p className="text-gray-400 text-xs">{adminInfo?.role}</p>
+                </div>
+              </div>
+              <button
+                onClick={handleLogout}
+                className="w-full flex items-center justify-center px-3 py-2 bg-red-600/20 text-red-300 hover:bg-red-600/30 rounded-lg transition-colors border border-red-500/30 text-sm"
+              >
+                <LogOut className="w-4 h-4 mr-2" />
+                Logout
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -277,7 +281,7 @@ export default function BookingsPage() {
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Revenue</p>
-                  <p className="text-3xl font-bold text-purple-400">₹{bookings.reduce((sum, b) => sum + (b.amount || 0), 0).toLocaleString()}</p>
+                  <p className="text-3xl font-bold text-purple-400">₹{bookings.reduce((sum, b) => sum + (parseInt(b.amount) || 0), 0).toLocaleString()}</p>
                 </div>
                 <TrendingUp className="h-8 w-8 text-purple-400" />
               </div>
@@ -332,7 +336,7 @@ export default function BookingsPage() {
                         )}
                       </td>
                       <td className="px-6 py-4">
-                        <span className="text-2xl font-bold text-green-400">₹{booking.amount || (booking.service?.includes('Package:') ? 2599 : 999)}</span>
+                        <span className="text-2xl font-bold text-green-400">₹{Math.round(booking.amount || (booking.service?.includes('Package:') ? 2599 : 999))}</span>
                       </td>
                       <td className="px-6 py-4">
                         <span className={`px-3 py-1 rounded-lg text-sm font-medium border ${getStatusColor(booking.status)}`}>

@@ -133,7 +133,7 @@ export default function InquiriesPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-900 via-purple-900 to-black flex">
       {/* Sidebar */}
-      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0`}>
+      <div className={`fixed inset-y-0 left-0 z-50 w-64 bg-black/40 backdrop-blur-xl border-r border-white/10 transform ${sidebarOpen ? 'translate-x-0' : '-translate-x-full'} transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 flex flex-col`}>
         <div className="flex items-center justify-between h-16 px-6 border-b border-white/10">
           <div className="flex items-center">
             <div className="w-8 h-8 bg-gradient-to-br from-yellow-400 to-orange-500 rounded-full flex items-center justify-center mr-3">
@@ -149,8 +149,8 @@ export default function InquiriesPage() {
           </button>
         </div>
 
-        <nav className="mt-8 px-4">
-          <div className="space-y-2">
+        <nav className="flex-1 mt-8 px-4 overflow-y-auto">
+          <div className="space-y-2 pb-4">
             {sidebarItems.map((item, index) => (
               <button
                 key={index}
@@ -168,7 +168,7 @@ export default function InquiriesPage() {
           </div>
         </nav>
 
-        <div className="absolute bottom-4 left-4 right-4">
+        <div className="flex-shrink-0 p-4 border-t border-white/10">
           <div className="bg-white/10 rounded-xl p-4 border border-white/20">
             <div className="flex items-center mb-2">
               <div className="w-8 h-8 bg-gradient-to-br from-blue-400 to-purple-600 rounded-full flex items-center justify-center mr-3">

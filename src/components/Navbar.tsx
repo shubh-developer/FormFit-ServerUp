@@ -109,106 +109,81 @@ const Navbar = () => {
           </Link>
 
           <div className="hidden md:flex items-center space-x-8">
-            {navItems.map((item) => {
-              if (item.showWhenLoggedIn && !isUserLoggedIn) return null;
-              if (item.showWhenLoggedOut && isUserLoggedIn) return null;
-              
-              if (item.href === '/services') {
-                return (
-                  <div key={item.href} className="relative group">
-                    <button
-                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE]"
-                    >
-                      {item.label}
+            {/* Home */}
+            <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+              Home
+            </Link>
+            
+            {/* Services */}
+            <div className="relative group">
+              <button className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
+                Services
+              </button>
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="py-1">
+                  <Link href="/services" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Spa Services
+                  </Link>
+                  <div className="relative group/fitness">
+                    <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+                      Fitness Training
+                      <span className="text-xs">›</span>
                     </button>
-                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                    <div className="absolute left-full top-0 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover/fitness:opacity-100 group-hover/fitness:visible transition-all duration-200">
                       <div className="py-1">
-                        <Link
-                          href="/services"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Spa Services
+                        <Link href="/fitness?type=online" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          Online Training
                         </Link>
-                        <div className="relative group/fitness">
-                          <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
-                            Fitness Training
-                            <span className="text-xs">›</span>
-                          </button>
-                          <div className="absolute left-full top-0 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover/fitness:opacity-100 group-hover/fitness:visible transition-all duration-200">
-                            <div className="py-1">
-                              <Link
-                                href="/fitness?type=online"
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Online Training
-                              </Link>
-                              <Link
-                                href="/fitness?type=offline"
-                                className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                              >
-                                Offline Training
-                              </Link>
-                            </div>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                );
-              }
-              
-              if (item.href === '/book') {
-                return (
-                  <div key={item.href} className="relative group">
-                    <button
-                      className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE]"
-                    >
-                      {item.label}
-                    </button>
-                    <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
-                      <div className="py-1">
-                        <Link
-                          href="/book"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Spa Booking
-                        </Link>
-                        <Link
-                          href="/fitness-book"
-                          className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
-                        >
-                          Fitness Booking
+                        <Link href="/fitness?type=offline" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          Offline Training
                         </Link>
                       </div>
                     </div>
                   </div>
-                );
-              }
-              
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center ${
-                    isActive(item.href)
-                      ? 'text-[#E8E8E9]'
-                      : item.icon === 'login'
-                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                        : item.icon === 'register'
-                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                        : item.client
-                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                        : 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                  }`}
-                >
-                  {item.icon === 'login' ? <img src="/images/user-6-48.png" className="w-7 h-7" alt="Login" /> : item.icon === 'register' }
-                  {item.icon !== 'login' && item.icon !== 'register' && item.label}
-                </Link>
-              );
-            })}
+                </div>
+              </div>
+            </div>
             
-
+            {/* Book Now */}
+            <div className="relative group">
+              <button className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
+                Book Now
+              </button>
+              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                <div className="py-1">
+                  <Link href="/book" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Spa Booking
+                  </Link>
+                  <Link href="/fitness-book" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                    Fitness Booking
+                  </Link>
+                </div>
+              </div>
+            </div>
             
+            {/* Packages */}
+            <Link href="/packages" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/packages') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+              Packages
+            </Link>
+            
+            {/* About */}
+            <Link href="/about" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/about') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+              About
+            </Link>
+            
+            {/* Contact */}
+            <Link href="/inquiry" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/inquiry') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+              Contact
+            </Link>
+            
+            {/* Register Icon */}
+            {!isUserLoggedIn && (
+              <Link href="/register" className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
+                <img src="/images/user-6-48.png" className="w-7 h-7" alt="Register" />
+              </Link>
+            )}
+            
+            {/* User Profile Dropdown */}
             {isUserLoggedIn && user && (
               <div className="relative group">
                 <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors">

@@ -58,17 +58,17 @@ const InquiryForm = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-6">
-      <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-8 border border-white/20">
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Contact Us</h2>
-        <p className="text-gray-600 mb-6">
+    <div className="max-w-full sm:max-w-2xl mx-auto p-2 sm:p-6">
+      <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-8 sm:p-8 border border-white/20">
+        <h2 className="text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Contact Us</h2>
+        <p className="text-gray-600 mb-4 sm:mb-6 hidden sm:block">
           Have a question or special request? We&apos;d love to hear from you. Fill out the form below and we&apos;ll get back to you as soon as possible.
         </p>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-4 sm:space-y-6">
           {/* Personal Information */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center hidden sm:flex">
               <User className="w-5 h-5 mr-2" />
               Your Information
             </h3>
@@ -80,7 +80,7 @@ const InquiryForm = () => {
               <input
                 type="text"
                 {...register('name')}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
+                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
                 placeholder="Enter your full name"
               />
               {errors.name && (
@@ -100,7 +100,7 @@ const InquiryForm = () => {
                   const target = e.target as HTMLInputElement;
                   target.value = target.value.replace(/[^0-9]/g, '').slice(0, 10);
                 }}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
+                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
                 placeholder="Enter your 10-digit phone number"
               />
               {errors.phone && (
@@ -115,7 +115,7 @@ const InquiryForm = () => {
               <input
                 type="email"
                 {...register('email')}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
+                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
                 placeholder="Enter your email address"
               />
               {errors.email && (
@@ -126,7 +126,7 @@ const InquiryForm = () => {
 
           {/* Message */}
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold text-gray-900 flex items-center">
+            <h3 className="text-lg font-semibold text-gray-900 flex items-center hidden sm:flex">
               <MessageSquare className="w-5 h-5 mr-2" />
               Your Message
             </h3>
@@ -137,8 +137,8 @@ const InquiryForm = () => {
               </label>
               <textarea
                 {...register('message')}
-                rows={5}
-                className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium resize-none"
+                rows={4}
+                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium resize-none text-lg sm:text-base"
                 placeholder="Tell us about your inquiry, special requirements, or any questions you have..."
               />
               {errors.message && (
@@ -146,6 +146,15 @@ const InquiryForm = () => {
               )}
             </div>
           </div>
+
+          {/* Submit Button */}
+          <button
+            type="submit"
+            className="w-full bg-blue-600 text-white py-5 sm:py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center text-lg sm:text-base"
+          >
+            <Send className="w-5 h-5 mr-2" />
+            Send Message
+          </button>
 
           {/* Quick Contact Info */}
           <div className="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -165,15 +174,6 @@ const InquiryForm = () => {
               </div>
             </div>
           </div>
-
-          {/* Submit Button */}
-          <button
-            type="submit"
-            className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors flex items-center justify-center"
-          >
-            <Send className="w-5 h-5 mr-2" />
-            Send Message
-          </button>
         </form>
       </div>
     </div>

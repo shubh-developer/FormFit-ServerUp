@@ -51,13 +51,14 @@ const Navbar = () => {
 
   const navItems = [
     { href: '/', label: 'Home' },
-    { href: '/services', label: 'Services' },
-    { href: '/book', label: 'Book Now' },
     { href: '/packages', label: 'Packages' },
-    { href: '/about', label: 'About' },
-    { href: '/inquiry', label: 'Contact' },
+    { href: '/book', label: 'Book Now' },
     { href: '/login', label: 'Login', client: true, showWhenLoggedOut: true, icon: 'login' },
     { href: '/register', label: 'Register', client: true, showWhenLoggedOut: true, icon: 'register' },
+    { href: '/inquiry', label: 'Contact' },
+    { href: '/about', label: 'About' },
+    { href: '/services', label: 'Services' },
+    { href: '/fitness', label: 'Fitness Training' },
     { href: '/user-dashboard', label: 'My Profile', client: true, showWhenLoggedIn: true },
   ];
 
@@ -245,109 +246,193 @@ const Navbar = () => {
           </div>
         </div>
 
+        {/* Mobile Sidebar */}
         {isMenuOpen && (
-          <div className="md:hidden">
-            <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 border-t border-white/20">
+          <div className="fixed inset-0 z-50 md:hidden">
+            {/* Backdrop */}
+            <div 
+              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            
+            {/* Sidebar */}
+            <div className="fixed top-0 right-0 h-auto max-h-[90vh] w-72 max-w-[80vw] backdrop-blur-2xl rounded-l-2xl transform transition-all duration-300 overflow-hidden">
+              {/* Sidebar Header */}
+              <div className="flex items-center justify-between p-5 border-b border-white/10">
+                <div className="flex items-center space-x-3">
+                  <div className="w-9 h-9 rounded-full overflow-hidden shadow-lg">
+                    <img src="/images/Forma_3.png" alt="FormaFit Logo" className="w-full h-full object-cover" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-white text-lg tracking-wide">FormaFit</h3>
+                    <p className="text-xs text-gray-300 font-medium">Professional Wellness</p>
+                    <p className="text-xs text-gray-400 font-medium">Massage & Fitness Care</p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 rounded-xl bg-white/5 hover:bg-white/15 border border-white/10 transition-all duration-200 hover:scale-105"
+                >
+                  <X size={16} className="text-white" />
+                </button>
+              </div>
+              
+              {/* Sidebar Content */}
+              <div className="flex-1 overflow-y-auto p-5 max-h-[calc(90vh-80px)]">
+                {/* Our Services Section */}
+                <div className="mb-6">
+                  <h3 className="text-white font-semibold text-sm mb-3 px-2">Our Services</h3>
+                  <div className="space-y-2">
+                    <Link
+                      href="/services"
+                      className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 border border-cyan-500/20 transition-all duration-200"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="w-8 h-8 bg-cyan-500/30 rounded-lg flex items-center justify-center">
+                        <span className="text-cyan-300 text-sm">💆</span>
+                      </div>
+                      <span className="font-medium text-white">Spa Services</span>
+                    </Link>
+                    
+                    <div>
+                      <button
+                        onClick={() => setExpandedMenu(expandedMenu === 'services-fitness' ? null : 'services-fitness')}
+                        className="w-full flex items-center justify-between p-3 rounded-lg bg-gradient-to-r from-orange-500/20 to-red-500/20 hover:from-orange-500/30 hover:to-red-500/30 border border-orange-500/20 transition-all duration-200"
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div className="w-8 h-8 bg-orange-500/30 rounded-lg flex items-center justify-center">
+                            <span className="text-orange-300 text-sm">💪</span>
+                          </div>
+                          <span className="font-medium text-white">Fitness Training</span>
+                        </div>
+                        <svg className={`w-4 h-4 text-gray-300 transform transition-transform duration-200 ${expandedMenu === 'services-fitness' ? 'rotate-90' : ''}`} fill="currentColor" viewBox="0 0 20 20">
+                          <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"/>
+                        </svg>
+                      </button>
+                      {expandedMenu === 'services-fitness' && (
+                        <div className="mt-2 ml-4 space-y-1">
+                          <Link
+                            href="/fitness?type=online"
+                            className="flex items-center space-x-3 p-2 rounded-md hover:bg-white/10 transition-colors"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              setExpandedMenu(null);
+                            }}
+                          >
+                            <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center">
+                              <span className="text-green-400 text-xs">🌐</span>
+                            </div>
+                            <span className="text-gray-300 text-sm">Online Training</span>
+                          </Link>
+                          <Link
+                            href="/fitness?type=offline"
+                            className="flex items-center space-x-3 p-2 rounded-md hover:bg-white/10 transition-colors"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              setExpandedMenu(null);
+                            }}
+                          >
+                            <div className="w-5 h-5 bg-purple-500/20 rounded flex items-center justify-center">
+                              <span className="text-purple-400 text-xs">🏋️</span>
+                            </div>
+                            <span className="text-gray-300 text-sm">Offline Training</span>
+                          </Link>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+                
+                <div className="space-y-1">
               {navItems.map((item) => {
                 if (item.showWhenLoggedIn && !isUserLoggedIn) return null;
                 if (item.showWhenLoggedOut && isUserLoggedIn) return null;
                 
-                if (item.href === '/services') {
-                  return (
-                    <div key={item.href}>
-                      <button
-                        onClick={() => setExpandedMenu(expandedMenu === 'services' ? null : 'services')}
-                        className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors flex items-center justify-between"
-                      >
-                        Services
-                        <span className={`transform transition-transform ${expandedMenu === 'services' ? 'rotate-90' : ''}`}>›</span>
-                      </button>
-                      {expandedMenu === 'services' && (
-                        <div className="pl-4">
-                          <Link
-                            href="/services"
-                            className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            Spa Services
-                          </Link>
-                          <button
-                            onClick={() => setExpandedMenu(expandedMenu === 'fitness' ? null : 'fitness')}
-                            className="w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors flex items-center justify-between"
-                          >
-                            Fitness Training
-                            <span className={`transform transition-transform ${expandedMenu === 'fitness' ? 'rotate-90' : ''}`}>›</span>
-                          </button>
-                          {expandedMenu === 'fitness' && (
-                            <div className="pl-4">
-                              <Link
-                                href="/fitness?type=online"
-                                className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
-                                onClick={() => setIsMenuOpen(false)}
-                              >
-                                Online Training
-                              </Link>
-                              <Link
-                                href="/fitness?type=offline"
-                                className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
-                                onClick={() => setIsMenuOpen(false)}
-                              >
-                                Offline Training
-                              </Link>
-                            </div>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  );
+                // Skip services and fitness as they're now in the Our Services section
+                if (item.href === '/services' || item.href === '/fitness') {
+                  return null;
                 }
+                
+                const getItemIcon = (href: string, icon?: string) => {
+                  if (icon === 'login') return '👤';
+                  if (icon === 'register') return '📝';
+                  switch (href) {
+                    case '/': return '🏠';
+                    case '/book': return '📅';
+                    case '/packages': return '📦';
+                    case '/about': return 'ℹ️';
+                    case '/inquiry': return '📞';
+                    case '/user-dashboard': return '👨‍💼';
+                    default: return '📄';
+                  }
+                };
                 
                 return (
                   <Link
                     key={item.href}
                     href={item.href}
-                    className={`block px-3 py-2 rounded-md text-base font-medium transition-colors flex items-center ${
+                    className={`flex items-center space-x-3 p-3 rounded-lg transition-colors ${
                       isActive(item.href)
-                        ? 'text-[#E8E8E9]'
-                        : item.icon === 'login'
-                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                        : item.icon === 'register'
-                        ? 'text-[#BBBBBE] hover:text-[#E8E8E9]'
-                        : 'text-[#BBBBBE] hover:text-[#E8E8E9]'
+                        ? 'bg-gradient-to-r from-[#2980B9] to-[#2ECC71] text-white shadow-lg'
+                        : 'bg-white/10 hover:bg-white/20 text-white'
                     }`}
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.icon === 'login' ? <img src="/images/user-6-48.png" className="w-8 h-8" alt="Login" /> : null}
-                    {item.icon !== 'login' && item.icon !== 'register' && item.label}
+                    <div className={`w-6 h-6 rounded-md flex items-center justify-center ${
+                      isActive(item.href) ? 'bg-white/20' : 'bg-white/10'
+                    }`}>
+                      <span className="text-xs">{getItemIcon(item.href, item.icon)}</span>
+                    </div>
+                    <span className="font-medium text-sm">{item.label}</span>
                   </Link>
                 );
               })}
               
 
               
-              {isUserLoggedIn && user && (
-                <div className="border-t border-white/20 pt-2 mt-2">
-                  <div className="px-3 py-2 text-sm text-[#BBBBBE]">
-                    Welcome, {user.name}
-                  </div>
-                  <Link
-                    href="/user-dashboard"
-                    className="block px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    View Profile
-                  </Link>
-                  <button
-                    onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors"
-                  >
-                    Logout
-                  </button>
                 </div>
-              )}
+                
+                {/* User Section */}
+                {isUserLoggedIn && user && (
+                  <div className="mt-4 pt-4 border-t border-white/20">
+                    <div className="flex items-center space-x-3 p-3 bg-gradient-to-r from-[#2980B9] to-[#2ECC71] rounded-lg text-white mb-3">
+                      <div className="w-8 h-8 bg-white/20 rounded-lg flex items-center justify-center">
+                        <span className="text-sm font-bold">{user.name.charAt(0).toUpperCase()}</span>
+                      </div>
+                      <div>
+                        <p className="font-semibold text-sm">{user.name}</p>
+                        <p className="text-white/80 text-xs">Welcome back!</p>
+                      </div>
+                    </div>
+                    
+                    <div className="space-y-1.5">
+                      <Link
+                        href="/user-dashboard"
+                        className="flex items-center space-x-3 p-2.5 rounded-lg bg-white/10 hover:bg-white/20 transition-colors"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className="w-6 h-6 bg-blue-500/20 rounded-md flex items-center justify-center">
+                          <span className="text-blue-400 text-xs">👤</span>
+                        </div>
+                        <span className="font-medium text-white text-sm">View Profile</span>
+                      </Link>
+                      
+                      <button
+                        onClick={() => {
+                          handleLogout();
+                          setIsMenuOpen(false);
+                        }}
+                        className="w-full flex items-center space-x-3 p-2.5 rounded-lg bg-red-500/20 hover:bg-red-500/30 transition-colors"
+                      >
+                        <div className="w-6 h-6 bg-red-500/20 rounded-md flex items-center justify-center">
+                          <LogOut className="w-3 h-3 text-red-400" />
+                        </div>
+                        <span className="font-medium text-red-400 text-sm">Logout</span>
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         )}

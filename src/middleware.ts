@@ -56,26 +56,13 @@ function verifyAdminToken(token: string): boolean {
 export function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Check if it's a master admin route (bypass middleware)
-  const isMasterRoute = pathname.startsWith('/master-');
-  
-  // Check if it's an admin route
-  const isAdminRoute = pathname.startsWith('/admin');
-  
-  // Check if it's a client route
-  const isClientRoute = protectedClientRoutes.includes(pathname) || publicClientRoutes.includes(pathname);
-  
-  if (isMasterRoute || (!isAdminRoute && !isClientRoute)) {
-    return NextResponse.next();
-  }
-
-  // Skip dashboard route authentication for now
-  if (pathname === '/dashboard') {
+  // Early return for master routes
+  if (pathname.startsWith('/master-')) {
     return NextResponse.next();
   }
 
   // Handle admin routes
-  if (isAdminRoute) {
+  if (pathname.startsWith('/admin')) {
     // Allow public admin routes
     if (publicAdminRoutes.includes(pathname)) {
       return NextResponse.next();
@@ -131,7 +118,7 @@ export function middleware(request: NextRequest) {
   }
 
   // Handle client routes
-  if (isClientRoute) {
+  if (pathname.startsWith('/profile') || pathname === '/login' || pathname === '/register') {
     // Allow public client routes
     if (publicClientRoutes.includes(pathname)) {
       return NextResponse.next();
@@ -166,13 +153,10 @@ export function middleware(request: NextRequest) {
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api (API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     */
-    '/((?!api|_next/static|_next/image|favicon.ico).*)',
+    '/admin/:path*',
+    '/profile/:path*',
+    '/dashboard/:path*',
+    '/login',
+    '/register'
   ],
 }; 

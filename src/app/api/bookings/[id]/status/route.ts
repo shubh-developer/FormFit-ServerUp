@@ -63,14 +63,27 @@ export async function PATCH(
       let emailStatus: string = validatedData.status;
       if (validatedData.status === 'booked') emailStatus = 'confirmed';
       
-      await sendBookingStatusUpdate(
+      console.log('📧 Attempting to send status email:', {
+        bookingId: updatedBooking.id,
+        email: updatedBooking.email,
+        status: emailStatus
+      });
+      
+      const emailSent = await sendBookingStatusUpdate(
         updatedBooking, 
         emailStatus, 
         updatedBooking.service_type || 'Massage Service',
         'Premium Oil'
       );
+      
+      if (emailSent) {
+        console.log('✅ Status email sent successfully');
+      } else {
+        console.error('❌ Status email failed to send');
+      }
     } catch (emailError) {
-      console.error('Failed to send status email:', emailError);
+      console.error('❌ Failed to send status email:', emailError);
+      console.error('❌ Email error details:', emailError instanceof Error ? emailError.stack : emailError);
     }
 
     return NextResponse.json({

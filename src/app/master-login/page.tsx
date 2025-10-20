@@ -1,9 +1,9 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { Eye, EyeOff, Lock, User, Crown, Shield } from 'lucide-react';
+import { Eye, EyeOff, Lock, User, Crown, Shield, Clock } from 'lucide-react';
 
 export default function MasterLoginPage() {
   const [formData, setFormData] = useState({
@@ -13,10 +13,76 @@ export default function MasterLoginPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
+  const [attempts, setAttempts] = useState(0);
+  const [lockoutTime, setLockoutTime] = useState<number | null>(null);
+  const [remainingTime, setRemainingTime] = useState(0);
   const router = useRouter();
+
+  useEffect(() => {
+    const storedAttempts = localStorage.getItem('masterLoginAttempts');
+    const storedLockout = localStorage.getItem('masterLoginLockout');
+    
+    if (storedAttempts) {
+      setAttempts(parseInt(storedAttempts));
+    }
+    
+    if (storedLockout) {
+      const lockoutEnd = parseInt(storedLockout);
+      const now = Date.now();
+      
+      if (now < lockoutEnd) {
+        setLockoutTime(lockoutEnd);
+        setRemainingTime(Math.ceil((lockoutEnd - now) / 1000));
+      } else {
+        localStorage.removeItem('masterLoginLockout');
+        localStorage.removeItem('masterLoginAttempts');
+        setAttempts(0);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (lockoutTime) {
+      interval = setInterval(() => {
+        const now = Date.now();
+        const remaining = Math.ceil((lockoutTime - now) / 1000);
+        
+        if (remaining <= 0) {
+          setLockoutTime(null);
+          setRemainingTime(0);
+          setAttempts(0);
+          localStorage.removeItem('masterLoginLockout');
+          localStorage.removeItem('masterLoginAttempts');
+          setError('');
+        } else {
+          setRemainingTime(remaining);
+        }
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) clearInterval(interval);
+    };
+  }, [lockoutTime]);
+
+  const isLocked = lockoutTime && Date.now() < lockoutTime;
+
+  const formatTime = (seconds: number) => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins}:${secs.toString().padStart(2, '0')}`;
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    if (isLocked) {
+      setError('Account locked. Try again after 1 day.');
+      return;
+    }
+    
     setIsLoading(true);
     setError('');
 
@@ -32,10 +98,108 @@ export default function MasterLoginPage() {
       const data = await response.json();
 
       if (data.success) {
+        // Log successful login
+        fetch('/api/master-login-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: formData.username,
+            ip_address: 'Unknown',
+            user_agent: navigator.userAgent,
+            status: 'success',
+            email_sent: false,
+            whatsapp_sent: false
+          })
+        }).catch(err => console.error('Failed to log success:', err));
+        
         localStorage.setItem('adminToken', data.token);
+        localStorage.removeItem('masterLoginAttempts');
+        localStorage.removeItem('masterLoginLockout');
+        setAttempts(0);
         router.push('/master-dashboard');
       } else {
-        setError(data.message || 'Login failed');
+        // Log failed attempt
+        fetch('/api/master-login-log', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            username: formData.username,
+            ip_address: 'Unknown',
+            user_agent: navigator.userAgent,
+            status: 'failed',
+            email_sent: false,
+            whatsapp_sent: false
+          })
+        }).catch(err => console.error('Failed to log failure:', err));
+        const newAttempts = attempts + 1;
+        setAttempts(newAttempts);
+        localStorage.setItem('masterLoginAttempts', newAttempts.toString());
+        
+        if (newAttempts >= 5) {
+          const lockoutEnd = Date.now() + (30 * 60 * 1000); // 30 minutes
+          setLockoutTime(lockoutEnd);
+          setRemainingTime(30 * 60);
+          localStorage.setItem('masterLoginLockout', lockoutEnd.toString());
+          setError('Too many failed attempts. Account locked for 1 day.');
+          
+          // Log to database and send notifications
+          const logData = {
+            username: formData.username,
+            ip_address: 'Unknown',
+            user_agent: navigator.userAgent,
+            status: 'blocked',
+            email_sent: false,
+            whatsapp_sent: false
+          };
+          
+          // Log to database
+          fetch('/api/master-login-log', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(logData)
+          }).catch(err => console.error('Failed to log attempt:', err));
+          
+          // Send email alert
+          fetch('/api/notifications/email', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'security_alert',
+              ipAddress: 'Unknown',
+              username: formData.username,
+              userAgent: navigator.userAgent
+            })
+          }).then(() => {
+            // Update log with email sent status
+            fetch('/api/master-login-log', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({...logData, email_sent: true})
+            }).catch(err => console.error('Failed to update email log:', err));
+          }).catch(err => console.error('Failed to send email alert:', err));
+          
+          // Send WhatsApp alert
+          fetch('/api/notifications/whatsapp', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              type: 'security_alert',
+              username: formData.username,
+              ipAddress: 'Unknown',
+              userAgent: navigator.userAgent
+            })
+          }).then(() => {
+            // Update log with WhatsApp sent status
+            fetch('/api/master-login-log', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({...logData, whatsapp_sent: true})
+            }).catch(err => console.error('Failed to update WhatsApp log:', err));
+          }).catch(err => console.error('Failed to send WhatsApp alert:', err));
+        } else {
+          const remaining = 5 - newAttempts;
+          setError(`Invalid credentials. ${remaining} attempt${remaining !== 1 ? 's' : ''} remaining.`);
+        }
       }
     } catch (error) {
       console.error('Login error:', error);
@@ -150,15 +314,34 @@ export default function MasterLoginPage() {
               </div>
 
               {error && (
-                <div className="rounded-xl bg-red-500/20 border border-red-400/30 p-4 backdrop-blur-sm">
-                  <div className="text-sm text-red-200">{error}</div>
+                <div className={`rounded-xl border p-4 backdrop-blur-sm ${
+                  isLocked 
+                    ? 'bg-orange-500/20 border-orange-400/30' 
+                    : 'bg-red-500/20 border-red-400/30'
+                }`}>
+                  <div className={`text-sm flex items-center ${
+                    isLocked ? 'text-orange-200' : 'text-red-200'
+                  }`}>
+                    {isLocked && <Clock className="w-4 h-4 mr-2" />}
+                    {error}
+                  </div>
+                </div>
+              )}
+
+              {isLocked && (
+                <div className="rounded-xl bg-yellow-500/20 border border-yellow-400/30 p-4 backdrop-blur-sm">
+                  <div className="text-sm text-yellow-200 text-center">
+                    <Clock className="w-5 h-5 mx-auto mb-2" />
+                    <div className="font-semibold">Security Lockout Active</div>
+                    <div className="text-lg mt-1">Account locked for 1 day</div>
+                  </div>
                 </div>
               )}
 
               <div>
                 <button
                   type="submit"
-                  disabled={isLoading}
+                  disabled={isLoading || isLocked}
                   className="w-full bg-gradient-to-r from-yellow-600 via-orange-600 to-red-600 text-white py-4 px-6 rounded-xl font-bold text-lg tracking-wide hover:from-yellow-700 hover:via-orange-700 hover:to-red-700 transition-all duration-300 transform hover:scale-[1.02] disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none shadow-2xl border border-yellow-400/20 backdrop-blur-sm relative overflow-hidden"
                   suppressHydrationWarning
                 >
@@ -167,6 +350,11 @@ export default function MasterLoginPage() {
                     <div className="flex items-center justify-center">
                       <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white mr-3"></div>
                       Authenticating...
+                    </div>
+                  ) : isLocked ? (
+                    <div className="flex items-center justify-center">
+                      <Clock className="w-5 h-5 mr-2" />
+                      Account Locked
                     </div>
                   ) : (
                     <div className="flex items-center justify-center">

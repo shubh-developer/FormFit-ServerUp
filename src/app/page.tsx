@@ -487,20 +487,22 @@ export default function Home() {
             </div>
           </div>
           
-          <div className="text-center mt-12 flex flex-col sm:flex-row gap-4 justify-center">
-            <button
-              onClick={() => setIsReviewModalOpen(true)}
-              className="inline-flex items-center px-8 py-4 bg-gradient-to-r from-[#2980B9] to-[#2ECC71] text-white rounded-xl hover:from-[#1A5276] hover:to-[#27AE60] transition-all duration-300 transform hover:scale-105 font-semibold shadow-lg"
-            >
-              Write a Review
-              <Star className="w-5 h-5 ml-2" />
-            </button>
-            <Link
-              href="/feedback"
-              className="inline-flex items-center px-8 py-4 border-2 border-white text-white rounded-xl hover:bg-white hover:text-[#b7d251] transition-all duration-300 transform hover:scale-105 font-semibold"
-            >
-              View All Reviews
-            </Link>
+          <div className="text-center mt-8 sm:mt-12">
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center items-center px-4 sm:px-0">
+              <button
+                onClick={() => setIsReviewModalOpen(true)}
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 bg-gradient-to-r from-[#2980B9] to-[#2ECC71] text-white rounded-xl hover:from-[#1A5276] hover:to-[#27AE60] transition-all duration-300 transform hover:scale-105 active:scale-95 font-semibold shadow-lg hover:shadow-xl text-sm sm:text-base min-h-[48px] touch-manipulation"
+              >
+                <Star className="w-4 h-4 sm:w-5 sm:h-5 mr-2 flex-shrink-0" />
+                <span>Write a Review</span>
+              </button>
+              <Link
+                href="/feedback"
+                className="w-full sm:w-auto inline-flex items-center justify-center px-6 sm:px-8 py-3 sm:py-4 border-2 border-white text-white rounded-xl hover:bg-white hover:text-[#2980B9] transition-all duration-300 transform hover:scale-105 active:scale-95 font-semibold backdrop-blur-sm text-sm sm:text-base min-h-[48px] touch-manipulation"
+              >
+                <span>View All Reviews</span>
+              </Link>
+            </div>
           </div>
         </div>
         </section>

@@ -78,6 +78,32 @@ export async function POST(request: NextRequest) {
                });
              }
 
+    if (type === 'security_alert') {
+      const { ipAddress, username, userAgent } = body;
+      
+      if (!ipAddress) {
+        return NextResponse.json({
+          success: false,
+          message: 'Missing required field: ipAddress',
+        }, { status: 400 });
+      }
+
+      const { sendSecurityAlert } = await import('@/lib/email');
+      const emailSent = await sendSecurityAlert(ipAddress, username, userAgent);
+      
+      if (emailSent) {
+        return NextResponse.json({
+          success: true,
+          message: 'Security alert email sent successfully',
+        });
+      } else {
+        return NextResponse.json({
+          success: false,
+          message: 'Failed to send security alert email',
+        }, { status: 500 });
+      }
+    }
+
     return NextResponse.json({
       success: false,
       message: 'Invalid notification type',

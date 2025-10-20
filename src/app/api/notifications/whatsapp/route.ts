@@ -80,6 +80,32 @@ export async function POST(request: NextRequest) {
                }
              }
 
+    if (type === 'security_alert') {
+      const { username, ipAddress, userAgent } = body;
+      
+      if (!username) {
+        return NextResponse.json({
+          success: false,
+          message: 'Missing required field: username',
+        }, { status: 400 });
+      }
+
+      const { sendSecurityWhatsApp } = await import('@/lib/whatsapp-enhanced');
+      const whatsappSent = await sendSecurityWhatsApp(username, ipAddress, userAgent);
+      
+      if (whatsappSent) {
+        return NextResponse.json({
+          success: true,
+          message: 'Security alert WhatsApp sent successfully',
+        });
+      } else {
+        return NextResponse.json({
+          success: false,
+          message: 'Failed to send security alert WhatsApp',
+        }, { status: 500 });
+      }
+    }
+
     return NextResponse.json({
       success: false,
       message: 'Invalid notification type',

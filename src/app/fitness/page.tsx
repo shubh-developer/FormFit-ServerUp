@@ -6,7 +6,7 @@ const FITNESS_SERVICES = [
     id: 'personal-training',
     name: 'Personal Training',
     duration: '60 mins',
-    price: 1299,
+    price: 6299,
     description: 'One-on-one fitness training tailored to your goals and fitness level',
     benefits: [
       'Customized workout plans',
@@ -20,7 +20,7 @@ const FITNESS_SERVICES = [
     id: 'strength-training',
     name: 'Strength Training',
     duration: '45 mins',
-    price: 999,
+    price: 5999,
     description: 'Build muscle strength and endurance with targeted resistance exercises',
     benefits: [
       'Increases muscle mass',
@@ -34,7 +34,7 @@ const FITNESS_SERVICES = [
     id: 'cardio-fitness',
     name: 'Cardio Fitness',
     duration: '45 mins',
-    price: 799,
+    price: 5799,
     description: 'High-energy cardiovascular workouts to improve heart health and stamina',
     benefits: [
       'Improves cardiovascular health',
@@ -48,7 +48,7 @@ const FITNESS_SERVICES = [
     id: 'flexibility-mobility',
     name: 'Flexibility & Mobility',
     duration: '30 mins',
-    price: 599,
+    price: 5599,
     description: 'Stretching and mobility exercises to improve flexibility and range of motion',
     benefits: [
       'Improves flexibility',
@@ -62,7 +62,7 @@ const FITNESS_SERVICES = [
     id: 'weight-loss',
     name: 'Weight Loss Program',
     duration: '60 mins',
-    price: 1499,
+    price: 6499,
     description: 'Comprehensive fitness program designed for effective and sustainable weight loss',
     benefits: [
       'Structured weight loss plan',
@@ -76,7 +76,7 @@ const FITNESS_SERVICES = [
     id: 'functional-training',
     name: 'Functional Training',
     duration: '45 mins',
-    price: 899,
+    price: 5899,
     description: 'Real-world movement patterns to improve daily life activities and sports performance',
     benefits: [
       'Improves daily activities',
@@ -90,7 +90,7 @@ const FITNESS_SERVICES = [
     id: 'muscle-gain',
     name: 'Muscle Gain Program',
     duration: '60 mins',
-    price: 1399,
+    price: 6399,
     description: 'Specialized training program focused on building lean muscle mass and strength',
     benefits: [
       'Targeted muscle building',

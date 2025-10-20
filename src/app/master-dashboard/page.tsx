@@ -33,7 +33,8 @@ export default function MasterDashboard() {
     pendingBookings: 0,
     newInquiries: 0,
     avgRating: 0,
-    totalFeedback: 0
+    totalFeedback: 0,
+    pendingAmount: 0
   });
   const [isLoading, setIsLoading] = useState(true);
   const [adminInfo, setAdminInfo] = useState<any>(null);
@@ -204,7 +205,7 @@ export default function MasterDashboard() {
 
         <div className="p-6">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => router.push('/bookings')}>
               <div className="flex items-center justify-between">
                 <div>
@@ -235,7 +236,15 @@ export default function MasterDashboard() {
               </div>
             </div>
 
-
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-gray-300 text-sm">Pending Amount</p>
+                  <p className="text-3xl font-bold text-orange-400">₹{stats.pendingAmount}</p>
+                </div>
+                <TrendingUp className="h-8 w-8 text-orange-400" />
+              </div>
+            </div>
 
             <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
               <div className="flex items-center justify-between">

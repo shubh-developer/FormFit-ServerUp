@@ -6,10 +6,11 @@ export async function GET(request: NextRequest) {
     const stats = await query(`
       SELECT 
         (SELECT COUNT(*) FROM bookings) as total_bookings,
-        (SELECT COUNT(*) FROM bookings WHERE status = 'pending') as pending_bookings,
+        (SELECT COUNT(*) FROM bookings WHERE LOWER(status) = 'pending') as pending_bookings,
         (SELECT COUNT(*) FROM inquiries WHERE status = 'new') as new_inquiries,
         (SELECT AVG(rating) FROM feedback) as avg_rating,
-        (SELECT COUNT(*) FROM feedback) as total_feedback
+        (SELECT COUNT(*) FROM feedback) as total_feedback,
+        (SELECT COALESCE(SUM(amount), 0) FROM bookings WHERE LOWER(status) = 'pending') as pending_amount
     `);
 
     return NextResponse.json({
@@ -20,6 +21,7 @@ export async function GET(request: NextRequest) {
         newInquiries: parseInt(stats.rows[0].new_inquiries) || 0,
         avgRating: parseFloat(stats.rows[0].avg_rating) || 0,
         totalFeedback: parseInt(stats.rows[0].total_feedback) || 0,
+        pendingAmount: parseFloat(stats.rows[0].pending_amount) || 0,
       }
     });
 
@@ -33,6 +35,7 @@ export async function GET(request: NextRequest) {
         newInquiries: 0,
         avgRating: 0,
         totalFeedback: 0,
+        pendingAmount: 0,
       }
     });
   }

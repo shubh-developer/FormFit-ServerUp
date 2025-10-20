@@ -36,13 +36,27 @@ export async function testConnection(): Promise<boolean> {
 
 // Get a client from the pool
 export async function getClient(): Promise<PoolClient> {
-  return await pool.connect();
+  try {
+    console.log('[DB] Attempting to get client from pool...');
+    const client = await pool.connect();
+    console.log('[DB] Client acquired successfully');
+    return client;
+  } catch (error) {
+    console.error('[DB] Failed to get client from pool:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: (error as any).code,
+      connectionString: process.env.DATABASE_URL ? 'Set' : 'Not set'
+    });
+    throw error;
+  }
 }
 
 // Execute a query with parameters and security measures
 export async function query(text: string, params?: unknown[]): Promise<any> {
-  const client = await getClient();
+  let client;
   try {
+    client = await getClient();
+    
     // Validate and sanitize parameters
     const sanitizedParams = params?.map(param => {
       if (typeof param === 'string') {
@@ -70,16 +84,31 @@ export async function query(text: string, params?: unknown[]): Promise<any> {
       return param;
     });
     
-    // Log query for security monitoring (in production, this should be more sophisticated)
-    // Database query executed
+    console.log('[DB] Executing query:', text.substring(0, 100) + '...');
+    console.log('[DB] With params:', sanitizedParams);
     
     const result = await client.query(text, sanitizedParams);
+    console.log('[DB] Query successful, rows affected:', result.rowCount);
     return result;
   } catch (error) {
-    console.error('[DB] Query error:', error);
-    throw new Error('Database operation failed');
+    console.error('[DB] Query error details:', {
+      message: error instanceof Error ? error.message : 'Unknown error',
+      code: (error as any).code,
+      detail: (error as any).detail,
+      hint: (error as any).hint,
+      position: (error as any).position,
+      query: text.substring(0, 200)
+    });
+    
+    // Re-throw with more specific error information
+    if (error instanceof Error) {
+      throw new Error(`Database operation failed: ${error.message}`);
+    }
+    throw new Error('Database operation failed: Unknown error');
   } finally {
-    client.release();
+    if (client) {
+      client.release();
+    }
   }
 }
 

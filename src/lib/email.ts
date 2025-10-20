@@ -775,4 +775,102 @@ function generateStatusUpdateEmailContent(booking: any, newStatus: string, servi
     </body>
     </html>
   `;
+}
+
+export async function sendSecurityAlert(ipAddress: string, username: string, userAgent: string): Promise<boolean> {
+  try {
+    const adminEmail = process.env.ADMIN_EMAIL || 'formafit503@gmail.com';
+    
+    const mailOptions = {
+      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || 'formafit503@gmail.com',
+      to: adminEmail,
+      subject: '🚨 Security Alert: Max Login Attempts Reached - FormaFit',
+      html: `
+        <!DOCTYPE html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <meta name="viewport" content="width=device-width, initial-scale=1.0">
+          <title>Security Alert</title>
+          <style>
+            body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
+            .container { max-width: 600px; margin: 0 auto; padding: 20px; }
+            .header { background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%); color: white; padding: 30px; text-align: center; border-radius: 10px 10px 0 0; }
+            .content { background: #f9f9f9; padding: 30px; border-radius: 0 0 10px 10px; }
+            .alert-details { background: #ffebee; border: 1px solid #f44336; padding: 20px; border-radius: 8px; margin: 20px 0; }
+            .detail-row { display: flex; justify-content: space-between; margin: 10px 0; padding: 8px 0; border-bottom: 1px solid #eee; }
+            .detail-label { font-weight: bold; color: #555; }
+            .detail-value { color: #333; font-family: monospace; }
+            .footer { text-align: center; margin-top: 30px; color: #666; font-size: 14px; }
+            .warning { background: #fff3e0; border-left: 4px solid #ff9800; padding: 15px; margin: 15px 0; }
+          </style>
+        </head>
+        <body>
+          <div class="container">
+            <div class="header">
+              <h1>🚨 Security Alert</h1>
+              <p>Maximum login attempts reached</p>
+            </div>
+            
+            <div class="content">
+              <p><strong>Security Alert:</strong> Someone has reached the maximum number of failed login attempts (5) on the Master Admin panel.</p>
+              
+              <div class="alert-details">
+                <h3>🔍 Incident Details</h3>
+                <div class="detail-row">
+                  <span class="detail-label">Attempted Username:</span>
+                  <span class="detail-value">${username || 'Not provided'}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">IP Address:</span>
+                  <span class="detail-value">${ipAddress}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">User Agent:</span>
+                  <span class="detail-value">${userAgent}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Timestamp:</span>
+                  <span class="detail-value">${new Date().toLocaleString('en-IN')}</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Failed Attempts:</span>
+                  <span class="detail-value">5 (Maximum reached)</span>
+                </div>
+                <div class="detail-row">
+                  <span class="detail-label">Account Status:</span>
+                  <span class="detail-value">Locked for 30 minutes</span>
+                </div>
+              </div>
+              
+              <div class="warning">
+                <h4>⚠️ Security Recommendations:</h4>
+                <ul>
+                  <li>Monitor this IP address for suspicious activity</li>
+                  <li>Consider implementing additional security measures if this persists</li>
+                  <li>Review access logs for any other unusual activity</li>
+                  <li>Ensure admin credentials are secure and not compromised</li>
+                </ul>
+              </div>
+              
+              <p><strong>Action Taken:</strong> The account has been automatically locked for 30 minutes to prevent further unauthorized access attempts.</p>
+              
+              <div class="footer">
+                <p>This is an automated security alert from FormaFit Admin System.</p>
+                <hr style="margin: 20px 0;">
+                <p><small>If you believe this is a false alarm, please investigate immediately.</small></p>
+              </div>
+            </div>
+          </div>
+        </body>
+        </html>
+      `,
+    };
+
+    await transporter.sendMail(mailOptions);
+    return true;
+  } catch (error) {
+    console.error('❌ Error sending security alert email:', error);
+    return false;
+  }
 } 

@@ -4,7 +4,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { usePathname } from 'next/navigation';
 import { useState, useEffect } from 'react';
-import { Menu, X, LogOut, UserPlus } from 'lucide-react';
+import { Menu, X, LogOut, UserPlus, Home, Calendar, Package, Info, Phone, User, FileText, Heart, Dumbbell, Globe, MapPin } from 'lucide-react';
 import { userSession } from '@/lib/userAuth';
 import { adminSession } from '@/lib/adminAuth';
 
@@ -226,12 +226,12 @@ const Navbar = () => {
           <div className="fixed inset-0 z-50 md:hidden">
             {/* Backdrop */}
             <div 
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm transition-opacity"
+              className="fixed inset-0 bg-gradient-to-br from-black/60 via-gray-900/40 to-black/60 backdrop-blur-md transition-all duration-500 animate-fade-in"
               onClick={() => setIsMenuOpen(false)}
             />
             
             {/* Sidebar */}
-            <div className="fixed top-0 right-0 h-auto max-h-[90vh] w-72 max-w-[80vw] backdrop-blur-2xl rounded-l-2xl transform transition-all duration-300 overflow-hidden">
+            <div className="fixed top-0 right-0 h-auto max-h-[90vh] w-72 max-w-[80vw] bg-gradient-to-br from-gray-900/98 via-black/95 to-gray-800/98 backdrop-blur-3xl rounded-l-[2rem] transform transition-all duration-500 ease-out overflow-hidden border-l-2 border-gradient-to-b from-blue-500/30 to-purple-500/30 shadow-[0_0_50px_rgba(0,0,0,0.8)] animate-premium-slide-in">
               {/* Sidebar Header */}
               <div className="flex items-center justify-between p-5 border-b border-white/10">
                 <div className="flex items-center space-x-3">
@@ -255,16 +255,16 @@ const Navbar = () => {
               {/* Sidebar Content */}
               <div className="flex-1 overflow-y-auto p-5 max-h-[calc(90vh-80px)]">
                 {/* Our Services Section */}
-                <div className="mb-6">
+                <div className="mb-1">
                   <h3 className="text-white font-semibold text-sm mb-3 px-2">Our Services</h3>
-                  <div className="space-y-2">
+                  <div className="space-y-1">
                     <Link
                       href="/services"
                       className="flex items-center space-x-3 p-3 rounded-lg bg-gradient-to-r from-cyan-500/20 to-blue-500/20 hover:from-cyan-500/30 hover:to-blue-500/30 border border-cyan-500/20 transition-all duration-200"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <div className="w-8 h-8 bg-cyan-500/30 rounded-lg flex items-center justify-center">
-                        <span className="text-cyan-300 text-sm">💆</span>
+                        <Heart className="w-3.5 h-3.5 text-white drop-shadow-lg" />
                       </div>
                       <span className="font-medium text-white">Spa Services</span>
                     </Link>
@@ -276,7 +276,7 @@ const Navbar = () => {
                       >
                         <div className="flex items-center space-x-3">
                           <div className="w-8 h-8 bg-orange-500/30 rounded-lg flex items-center justify-center">
-                            <span className="text-orange-300 text-sm">💪</span>
+                            <Dumbbell className="w-3.5 h-3.5 text-white drop-shadow-lg" />
                           </div>
                           <span className="font-medium text-white">Fitness Training</span>
                         </div>
@@ -295,7 +295,7 @@ const Navbar = () => {
                             }}
                           >
                             <div className="w-5 h-5 bg-green-500/20 rounded flex items-center justify-center">
-                              <span className="text-green-400 text-xs">🌐</span>
+                              <Globe className="w-3 h-3 text-white drop-shadow-md" />
                             </div>
                             <span className="text-gray-300 text-sm">Online Training</span>
                           </Link>
@@ -308,7 +308,7 @@ const Navbar = () => {
                             }}
                           >
                             <div className="w-5 h-5 bg-purple-500/20 rounded flex items-center justify-center">
-                              <span className="text-purple-400 text-xs">🏋️</span>
+                              <MapPin className="w-3 h-3 text-white drop-shadow-md" />
                             </div>
                             <span className="text-gray-300 text-sm">Offline Training</span>
                           </Link>
@@ -329,16 +329,16 @@ const Navbar = () => {
                 }
                 
                 const getItemIcon = (href: string, icon?: string) => {
-                  if (icon === 'login') return '👤';
-                  if (icon === 'register') return '📝';
+                  if (icon === 'login') return <User className="w-3.5 h-3.5 text-white drop-shadow-md" />;
+                  if (icon === 'register') return <FileText className="w-3.5 h-3.5 text-white drop-shadow-md" />;
                   switch (href) {
-                    case '/': return '🏠';
-                    case '/book': return '📅';
-                    case '/packages': return '📦';
-                    case '/about': return 'ℹ️';
-                    case '/inquiry': return '📞';
+                    case '/': return <Home className="w-3.5 h-3.5 text-white drop-shadow-md" />;
+                    case '/book': return <Calendar className="w-3.5 h-3.5 text-white drop-shadow-md" />;
+                    case '/packages': return <Package className="w-3.5 h-3.5 text-white drop-shadow-md" />;
+                    case '/about': return <Info className="w-3.5 h-3.5 text-white drop-shadow-md" />;
+                    case '/inquiry': return <Phone className="w-3.5 h-3.5 text-white drop-shadow-md" />;
                     case '/user-dashboard': return '👨‍💼';
-                    default: return '📄';
+                    default: return <FileText className="w-3.5 h-3.5 text-white drop-shadow-md" />;
                   }
                 };
                 
@@ -356,7 +356,7 @@ const Navbar = () => {
                     <div className={`w-6 h-6 rounded-md flex items-center justify-center ${
                       isActive(item.href) ? 'bg-white/20' : 'bg-white/10'
                     }`}>
-                      <span className="text-xs">{getItemIcon(item.href, item.icon)}</span>
+                      {getItemIcon(item.href, item.icon)}
                     </div>
                     <span className="font-medium text-sm">{item.label}</span>
                   </Link>
@@ -387,7 +387,7 @@ const Navbar = () => {
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <div className="w-6 h-6 bg-blue-500/20 rounded-md flex items-center justify-center">
-                          <span className="text-blue-400 text-xs">👤</span>
+                          <User className="w-3.5 h-3.5 text-white drop-shadow-md" />
                         </div>
                         <span className="font-medium text-white text-sm">View Profile</span>
                       </Link>

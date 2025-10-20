@@ -9,27 +9,53 @@ const inquirySchema = z.object({
   message: z.string().min(10, 'Message must be at least 10 characters'),
 });
 
+
+
 export async function POST(request: NextRequest) {
   try {
-    const body = await request.json();
+    const body = await request.text();
+    console.log('📥 Received inquiry request:', body);
+    
+    if (!body) {
+      return NextResponse.json({
+        success: false,
+        message: 'Request body is empty'
+      }, { status: 400 });
+    }
+    
+    const data = JSON.parse(body);
+    console.log('📋 Parsed inquiry data:', data);
     
     // Validate the request body
-    const validatedData = inquirySchema.parse(body);
+    const validatedData = inquirySchema.parse(data);
+    console.log('✅ Validation passed:', validatedData);
+    
+    // Create new inquiry object
+    const newInquiry = {
+      id: Date.now(),
+      name: validatedData.name.trim(),
+      phone: validatedData.phone,
+      email: validatedData.email || null,
+      message: validatedData.message.trim(),
+      status: 'new',
+      created_at: new Date().toISOString()
+    };
     
     // Insert inquiry into database
     const result = await query(`
-      INSERT INTO inquiries (name, phone, email, message)
-      VALUES ($1, $2, $3, $4)
+      INSERT INTO inquiries (name, phone, email, message, status, created_at, updated_at)
+      VALUES ($1, $2, $3, $4, $5, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
       RETURNING *
     `, [
-      validatedData.name,
-      validatedData.phone,
-      validatedData.email || null,
-      validatedData.message
+      newInquiry.name,
+      newInquiry.phone,
+      newInquiry.email,
+      newInquiry.message,
+      newInquiry.status
     ]);
-
+    
     const inquiry = result.rows[0];
-
+    
     return NextResponse.json({
       success: true,
       message: 'Inquiry submitted successfully! We will get back to you soon.',
@@ -38,6 +64,7 @@ export async function POST(request: NextRequest) {
 
   } catch (error) {
     if (error instanceof z.ZodError) {
+      console.error('❌ Validation error:', error.issues);
       return NextResponse.json({
         success: false,
         message: 'Validation failed',
@@ -45,17 +72,17 @@ export async function POST(request: NextRequest) {
       }, { status: 400 });
     }
 
-    console.error('Inquiry API Error:', error);
+    console.error('❌ Inquiry API Error:', error);
+    console.error('❌ Full error details:', error instanceof Error ? error.stack : error);
     return NextResponse.json({
       success: false,
-      message: 'Internal server error',
+      message: 'Failed to submit inquiry: ' + (error instanceof Error ? error.message : 'Unknown error'),
     }, { status: 500 });
   }
 }
 
 export async function GET() {
   try {
-    // Fetch all inquiries from database
     const result = await query(`
       SELECT * FROM inquiries 
       ORDER BY created_at DESC

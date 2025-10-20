@@ -297,3 +297,16 @@ model AppointmentTracking {
   @@map("appointment_tracking")
 }
 
+model MasterLoginAttempt {
+  id            Int      @id @default(autoincrement())
+  username      String
+  ip_address    String?
+  user_agent    String?
+  status        String   // 'success', 'failed', 'blocked'
+  email_sent    Boolean  @default(false)
+  whatsapp_sent Boolean  @default(false)
+  created_at    DateTime @default(now())
+
+  @@map("master_login_attempts")
+}
+

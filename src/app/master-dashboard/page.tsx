@@ -187,7 +187,7 @@ export default function MasterDashboard() {
       <div className="flex-1 lg:ml-0">
         {/* Header */}
         <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-          <div className="flex justify-between items-center px-6 py-4">
+          <div className="flex justify-between items-center px-4 sm:px-6 py-4">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -196,112 +196,110 @@ export default function MasterDashboard() {
                 <Menu className="h-6 w-6" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-white">Master Control Panel</h1>
-                <p className="text-gray-300">System Overview & Management</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Master Control Panel</h1>
+                <p className="text-gray-300 text-sm sm:text-base">System Overview & Management</p>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Stats Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 mb-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => router.push('/bookings')}>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => router.push('/bookings')}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Total Bookings</p>
-                  <p className="text-3xl font-bold text-white">{stats.totalBookings}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-white">{stats.totalBookings}</p>
                 </div>
                 <Calendar className="h-8 w-8 text-blue-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Pending</p>
-                  <p className="text-3xl font-bold text-yellow-400">{stats.pendingBookings}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-yellow-400">{stats.pendingBookings}</p>
                 </div>
-                <Activity className="h-8 w-8 text-yellow-400" />
+                <Activity className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => router.push('/inquiries')}>
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer" onClick={() => router.push('/inquiries')}>
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">New Inquiries</p>
-                  <p className="text-3xl font-bold text-green-400">{stats.newInquiries}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-green-400">{stats.newInquiries}</p>
                 </div>
-                <MessageSquare className="h-8 w-8 text-green-400" />
+                <MessageSquare className="h-6 w-6 sm:h-8 sm:w-8 text-green-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Pending Amount</p>
-                  <p className="text-3xl font-bold text-orange-400">₹{stats.pendingAmount}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-orange-400">₹{stats.pendingAmount}</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-orange-400" />
+                <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-orange-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Total Revenue</p>
-                  <p className="text-3xl font-bold text-green-400">
+                  <p className="text-2xl sm:text-3xl font-bold text-green-400">
                     ₹{recentBookings.reduce((total, booking: any) => {
                       const amount = parseFloat(booking.amount) || 0;
                       return total + amount;
                     }, 0).toFixed(2)}
                   </p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-green-400" />
+                <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-green-400" />
               </div>
             </div>
           </div>
 
           {/* Quick Actions */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer"
-                 onClick={() => router.push('/dashboard')}>
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer"
+                 onClick={() => router.push('/bookings')}>
               <div className="flex items-center mb-4">
-                <Users className="h-8 w-8 text-blue-400 mr-3" />
-                <h3 className="text-xl font-semibold text-white">Manage Bookings</h3>
+                <Users className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400 mr-3" />
+                <h3 className="text-lg sm:text-xl font-semibold text-white">Manage Bookings</h3>
               </div>
-              <p className="text-gray-300">View and manage all customer bookings</p>
+              <p className="text-gray-300 text-sm sm:text-base">View and manage all customer bookings</p>
             </div>
 
-
-
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer"
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20 hover:bg-white/15 transition-colors cursor-pointer"
                  onClick={() => router.push('/master-feedback')}>
               <div className="flex items-center mb-4">
-                <Star className="h-8 w-8 text-orange-400 mr-3" />
-                <h3 className="text-xl font-semibold text-white">Customer Feedback</h3>
+                <Star className="h-6 w-6 sm:h-8 sm:w-8 text-orange-400 mr-3" />
+                <h3 className="text-lg sm:text-xl font-semibold text-white">Customer Feedback</h3>
               </div>
-              <p className="text-gray-300">Review ratings and customer feedback</p>
+              <p className="text-gray-300 text-sm sm:text-base">Review ratings and customer feedback</p>
             </div>
           </div>
 
 
 
           {/* Recent Bookings */}
-          <div className="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-            <div className="flex justify-between items-center mb-6">
-              <h2 className="text-2xl font-bold text-white flex items-center">
-                <Calendar className="h-6 w-6 mr-3 text-blue-400" />
+          <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-8 border border-white/20">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 gap-4">
+              <h2 className="text-xl sm:text-2xl font-bold text-white flex items-center">
+                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-3 text-blue-400" />
                 Recent Bookings
               </h2>
-              <div className="relative">
+              <div className="relative w-full sm:w-auto">
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
                 <input
                   type="text"
-                  placeholder="Search by name or email..."
+                  placeholder="Search..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400"
+                  className="w-full sm:w-64 pl-10 pr-4 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-400 text-sm"
                 />
               </div>
             </div>
@@ -313,12 +311,12 @@ export default function MasterDashboard() {
                   booking.email.toLowerCase().includes(searchTerm.toLowerCase())
                 )
                 .map((booking: any) => (
-                <div key={booking.id} className="bg-white/5 rounded-lg p-4 border border-white/10 hover:bg-white/10 transition-colors">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <div className="flex items-center mb-2">
-                        <h3 className="text-white font-semibold mr-3">{booking.name}</h3>
-                        <span className={`px-2 py-1 rounded-full text-xs font-medium ${
+                <div key={booking.id} className="bg-white/5 rounded-lg p-3 sm:p-4 border border-white/10 hover:bg-white/10 transition-colors">
+                  <div className="flex flex-col sm:flex-row justify-between items-start gap-3">
+                    <div className="flex-1 w-full">
+                      <div className="flex flex-col sm:flex-row sm:items-center mb-2 gap-2">
+                        <h3 className="text-white font-semibold">{booking.name}</h3>
+                        <span className={`px-2 py-1 rounded-full text-xs font-medium w-fit ${
                           booking.status === 'Confirmed' ? 'bg-green-500/20 text-green-300' :
                           booking.status === 'Pending' ? 'bg-yellow-500/20 text-yellow-300' :
                           'bg-red-500/20 text-red-300'
@@ -326,19 +324,19 @@ export default function MasterDashboard() {
                           {booking.status}
                         </span>
                       </div>
-                      <div className="flex items-center text-gray-300 text-sm space-x-4">
+                      <div className="flex flex-col sm:flex-row text-gray-300 text-sm gap-2 sm:gap-4">
                         <div className="flex items-center">
-                          <Mail className="h-4 w-4 mr-1" />
-                          {booking.email}
+                          <Mail className="h-4 w-4 mr-1 flex-shrink-0" />
+                          <span className="truncate">{booking.email}</span>
                         </div>
                         <div className="flex items-center">
-                          <Phone className="h-4 w-4 mr-1" />
+                          <Phone className="h-4 w-4 mr-1 flex-shrink-0" />
                           {booking.contact}
                         </div>
                       </div>
                       <p className="text-gray-400 text-sm mt-1">{booking.service}</p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-left sm:text-right w-full sm:w-auto">
                       <p className="text-white font-semibold">₹{parseFloat(booking.amount) || 0}</p>
                       <p className="text-gray-400 text-sm">
                         {new Date(booking.booking_date).toLocaleDateString()}
@@ -360,42 +358,42 @@ export default function MasterDashboard() {
           </div>
 
           {/* System Management */}
-          <div className="mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-8 border border-white/20">
-            <h2 className="text-2xl font-bold text-white mb-6 flex items-center">
-              <Shield className="h-6 w-6 mr-3 text-yellow-400" />
+          <div className="mt-6 sm:mt-8 bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-8 border border-white/20">
+            <h2 className="text-xl sm:text-2xl font-bold text-white mb-4 sm:mb-6 flex items-center">
+              <Shield className="h-5 w-5 sm:h-6 sm:w-6 mr-3 text-yellow-400" />
               System Management
             </h2>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-              <button className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 p-4 rounded-xl transition-colors border border-blue-500/30">
-                <Database className="h-6 w-6 mx-auto mb-2" />
-                <span className="block text-sm">Database Status</span>
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+              <button className="bg-blue-600/20 hover:bg-blue-600/30 text-blue-300 p-3 sm:p-4 rounded-xl transition-colors border border-blue-500/30">
+                <Database className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2" />
+                <span className="block text-xs sm:text-sm">Database Status</span>
               </button>
               
-              <button className="bg-green-600/20 hover:bg-green-600/30 text-green-300 p-4 rounded-xl transition-colors border border-green-500/30">
-                <Settings className="h-6 w-6 mx-auto mb-2" />
-                <span className="block text-sm">System Settings</span>
+              <button className="bg-green-600/20 hover:bg-green-600/30 text-green-300 p-3 sm:p-4 rounded-xl transition-colors border border-green-500/30">
+                <Settings className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2" />
+                <span className="block text-xs sm:text-sm">System Settings</span>
               </button>
               
-              <button className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 p-4 rounded-xl transition-colors border border-purple-500/30">
-                <Users className="h-6 w-6 mx-auto mb-2" />
-                <span className="block text-sm">User Management</span>
+              <button className="bg-purple-600/20 hover:bg-purple-600/30 text-purple-300 p-3 sm:p-4 rounded-xl transition-colors border border-purple-500/30">
+                <Users className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2" />
+                <span className="block text-xs sm:text-sm">User Management</span>
               </button>
               
-              <button className="bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 p-4 rounded-xl transition-colors border border-orange-500/30">
-                <Activity className="h-6 w-6 mx-auto mb-2" />
-                <span className="block text-sm">System Logs</span>
+              <button className="bg-orange-600/20 hover:bg-orange-600/30 text-orange-300 p-3 sm:p-4 rounded-xl transition-colors border border-orange-500/30">
+                <Activity className="h-5 w-5 sm:h-6 sm:w-6 mx-auto mb-2" />
+                <span className="block text-xs sm:text-sm">System Logs</span>
               </button>
             </div>
           </div>
 
           {/* Quick Access */}
-          <div className="mt-8 text-center">
+          <div className="mt-6 sm:mt-8 text-center">
             <button
-              onClick={() => router.push('/dashboard')}
-              className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-8 py-4 rounded-xl font-semibold text-lg hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-2xl"
+              onClick={() => router.push('/bookings')}
+              className="w-full sm:w-auto bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-6 sm:px-8 py-3 sm:py-4 rounded-xl font-semibold text-base sm:text-lg hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-2xl"
             >
-              Access Full Admin Dashboard
+              Access Bookings Dashboard
             </button>
           </div>
         </div>

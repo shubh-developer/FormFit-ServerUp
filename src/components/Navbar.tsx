@@ -15,6 +15,7 @@ const Navbar = () => {
   const [isAdminLoggedIn, setIsAdminLoggedIn] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [expandedMenu, setExpandedMenu] = useState<string | null>(null);
+  const [scrollProgress, setScrollProgress] = useState(0);
   const pathname = usePathname();
 
   useEffect(() => {
@@ -34,8 +35,19 @@ const Navbar = () => {
 
     checkUserAuth();
     
+    const handleScroll = () => {
+      const scrollY = window.scrollY;
+      const progress = Math.min(scrollY / 100, 1);
+      setScrollProgress(progress);
+    };
+    
+    window.addEventListener('scroll', handleScroll);
+    
     const interval = setInterval(checkUserAuth, 1000);
-    return () => clearInterval(interval);
+    return () => {
+      clearInterval(interval);
+      window.removeEventListener('scroll', handleScroll);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -94,7 +106,14 @@ const Navbar = () => {
   }
 
   return (
-    <nav className="sticky top-0 z-50">
+    <nav 
+      className={`sticky top-0 z-50 transition-all duration-300 ease-out ${scrollProgress > 0.5 ? 'animate-navbar-glow' : ''}`}
+      style={{
+        background: `linear-gradient(135deg, rgba(17, 24, 39, ${0.95 * scrollProgress}) 0%, rgba(0, 0, 0, ${0.95 * scrollProgress}) 100%)`,
+        backdropFilter: `blur(${15 * scrollProgress}px)`,
+        borderBottom: `1px solid rgba(249, 115, 22, ${0.4 * scrollProgress})`,
+        boxShadow: `0 ${4 * scrollProgress}px ${20 * scrollProgress}px rgba(0, 0, 0, ${0.2 * scrollProgress}), 0 0 ${10 * scrollProgress}px rgba(249, 115, 22, ${0.1 * scrollProgress})`
+      }}>
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center hover:scale-105 transition-transform">
@@ -110,31 +129,31 @@ const Navbar = () => {
 
           <div className="hidden md:flex items-center space-x-8">
             {/* Home */}
-            <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+            <Link href="/" className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg ${isActive('/') ? 'text-[#E8E8E9] bg-orange-500/20' : 'text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10'}`}>
               Home
             </Link>
             
             {/* Services */}
             <div className="relative group">
-              <button className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
+              <button className="px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg flex items-center text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10">
                 Services
               </button>
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="absolute left-0 mt-2 w-48 bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-md shadow-lg border border-orange-500/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="py-1">
-                  <Link href="/services" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <Link href="/services" className="block px-4 py-2 text-sm text-white hover:bg-white/10">
                     Spa Services
                   </Link>
                   <div className="relative group/fitness">
-                    <button className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 flex items-center justify-between">
+                    <button className="w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10 flex items-center justify-between">
                       Fitness Training
                       <span className="text-xs">›</span>
                     </button>
-                    <div className="absolute left-full top-0 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover/fitness:opacity-100 group-hover/fitness:visible transition-all duration-200">
+                    <div className="absolute left-full top-0 w-48 bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-md shadow-lg border border-orange-500/30 opacity-0 invisible group-hover/fitness:opacity-100 group-hover/fitness:visible transition-all duration-200">
                       <div className="py-1">
-                        <Link href="/fitness?type=online" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <Link href="/fitness?type=online" className="block px-4 py-2 text-sm text-white hover:bg-white/10">
                           Online Training
                         </Link>
-                        <Link href="/fitness?type=offline" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                        <Link href="/fitness?type=offline" className="block px-4 py-2 text-sm text-white hover:bg-white/10">
                           Offline Training
                         </Link>
                       </div>
@@ -146,15 +165,15 @@ const Navbar = () => {
             
             {/* Book Now */}
             <div className="relative group">
-              <button className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
+              <button className="px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg flex items-center text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10">
                 Book Now
               </button>
-              <div className="absolute left-0 mt-2 w-48 bg-white rounded-md shadow-lg border opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
+              <div className="absolute left-0 mt-2 w-48 bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-md shadow-lg border border-orange-500/30 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200">
                 <div className="py-1">
-                  <Link href="/book" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <Link href="/book" className="block px-4 py-2 text-sm text-white hover:bg-white/10">
                     Spa Booking
                   </Link>
-                  <Link href="/fitness-book" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                  <Link href="/fitness-book" className="block px-4 py-2 text-sm text-white hover:bg-white/10">
                     Fitness Booking
                   </Link>
                 </div>
@@ -162,31 +181,31 @@ const Navbar = () => {
             </div>
             
             {/* Packages */}
-            <Link href="/packages" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/packages') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+            <Link href="/packages" className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg ${isActive('/packages') ? 'text-[#E8E8E9] bg-orange-500/20' : 'text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10'}`}>
               Packages
             </Link>
             
             {/* About */}
-            <Link href="/about" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/about') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+            <Link href="/about" className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg ${isActive('/about') ? 'text-[#E8E8E9] bg-orange-500/20' : 'text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10'}`}>
               About
             </Link>
             
             {/* Contact */}
-            <Link href="/inquiry" className={`px-3 py-2 rounded-md text-sm font-medium transition-colors ${isActive('/inquiry') ? 'text-[#E8E8E9]' : 'text-[#BBBBBE] hover:text-[#E8E8E9]'}`}>
+            <Link href="/inquiry" className={`px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg ${isActive('/inquiry') ? 'text-[#E8E8E9] bg-orange-500/20' : 'text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10'}`}>
               Contact
             </Link>
             
             {/* Register Icon */}
             {!isUserLoggedIn && (
-              <Link href="/register" className="px-3 py-2 rounded-md text-sm font-medium transition-colors flex items-center text-[#BBBBBE] hover:text-[#E8E8E9]">
-                <img src="/images/user-6-48.png" className="w-7 h-7" alt="Register" />
+              <Link href="/register" className="px-3 py-2 rounded-md text-sm font-medium transition-all duration-300 transform hover:scale-110 hover:shadow-lg flex items-center text-[#BBBBBE] hover:text-[#E8E8E9] hover:bg-white/10">
+                <img src="/images/user-6-48.png" className="w-7 h-7 transition-transform duration-300 hover:rotate-12" alt="Register" />
               </Link>
             )}
             
             {/* User Profile Dropdown */}
             {isUserLoggedIn && user && (
               <div className="relative group">
-                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-colors">
+                <button className="flex items-center space-x-2 px-3 py-2 rounded-md text-sm font-medium text-[#BBBBBE] hover:text-[#E8E8E9] transition-all duration-300 transform hover:scale-110 hover:shadow-lg hover:bg-white/10">
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5.121 17.804A13.937 13.937 0 0112 16c2.5 0 4.847.655 6.879 1.804M15 10a3 3 0 11-6 0 3 3 0 016 0zm6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                   <span>{user.name}</span>
                 </button>

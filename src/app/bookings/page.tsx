@@ -221,7 +221,7 @@ export default function BookingsPage() {
       <div className="flex-1 lg:ml-0">
         {/* Header */}
         <div className="bg-black/20 backdrop-blur-sm border-b border-white/10">
-          <div className="flex justify-between items-center px-6 py-4">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center px-4 sm:px-6 py-4 gap-4">
             <div className="flex items-center">
               <button
                 onClick={() => setSidebarOpen(true)}
@@ -230,13 +230,13 @@ export default function BookingsPage() {
                 <Menu className="h-6 w-6" />
               </button>
               <div>
-                <h1 className="text-2xl font-bold text-white">Bookings Management</h1>
-                <p className="text-gray-300">Manage customer bookings and appointments</p>
+                <h1 className="text-xl sm:text-2xl font-bold text-white">Bookings Management</h1>
+                <p className="text-gray-300 text-sm sm:text-base">Manage customer bookings and appointments</p>
               </div>
             </div>
             <button 
               onClick={() => setShowCreateForm(true)}
-              className="bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-6 py-3 rounded-xl font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center"
+              className="w-full sm:w-auto bg-gradient-to-r from-yellow-600 to-orange-600 text-white px-4 sm:px-6 py-3 rounded-xl font-semibold hover:from-yellow-700 hover:to-orange-700 transition-all duration-300 transform hover:scale-105 shadow-lg flex items-center justify-center"
             >
               <Plus className="w-5 h-5 mr-2" />
               Create Booking
@@ -244,60 +244,132 @@ export default function BookingsPage() {
           </div>
         </div>
 
-        <div className="p-6">
+        <div className="p-4 sm:p-6">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Total Bookings</p>
-                  <p className="text-3xl font-bold text-white">{bookings.length}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-white">{bookings.length}</p>
                 </div>
-                <Calendar className="h-8 w-8 text-blue-400" />
+                <Calendar className="h-6 w-6 sm:h-8 sm:w-8 text-blue-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Confirmed</p>
-                  <p className="text-3xl font-bold text-green-400">{bookings.filter(b => b.status === 'Confirmed').length}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-green-400">{bookings.filter(b => b.status === 'Confirmed').length}</p>
                 </div>
-                <CheckCircle className="h-8 w-8 text-green-400" />
+                <CheckCircle className="h-6 w-6 sm:h-8 sm:w-8 text-green-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Pending</p>
-                  <p className="text-3xl font-bold text-yellow-400">{bookings.filter(b => b.status === 'Pending').length}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-yellow-400">{bookings.filter(b => b.status === 'Pending').length}</p>
                 </div>
-                <Clock className="h-8 w-8 text-yellow-400" />
+                <Clock className="h-6 w-6 sm:h-8 sm:w-8 text-yellow-400" />
               </div>
             </div>
 
-            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-6 border border-white/20">
+            <div className="bg-white/10 backdrop-blur-md rounded-2xl p-4 sm:p-6 border border-white/20">
               <div className="flex items-center justify-between">
                 <div>
                   <p className="text-gray-300 text-sm">Revenue</p>
-                  <p className="text-3xl font-bold text-purple-400">₹{bookings.reduce((sum, b) => sum + (parseInt(b.amount) || 0), 0).toLocaleString()}</p>
+                  <p className="text-2xl sm:text-3xl font-bold text-purple-400">₹{bookings.reduce((sum, b) => sum + (parseInt(b.amount) || 0), 0).toLocaleString()}</p>
                 </div>
-                <TrendingUp className="h-8 w-8 text-purple-400" />
+                <TrendingUp className="h-6 w-6 sm:h-8 sm:w-8 text-purple-400" />
               </div>
             </div>
           </div>
 
           {/* Bookings Table */}
           <div className="bg-white/10 backdrop-blur-md rounded-2xl border border-white/20 overflow-hidden">
-            <div className="px-6 py-4 border-b border-white/10">
-              <h2 className="text-xl font-bold text-white flex items-center">
-                <Calendar className="h-6 w-6 mr-3 text-yellow-400" />
+            <div className="px-4 sm:px-6 py-4 border-b border-white/10">
+              <h2 className="text-lg sm:text-xl font-bold text-white flex items-center">
+                <Calendar className="h-5 w-5 sm:h-6 sm:w-6 mr-3 text-yellow-400" />
                 All Bookings
               </h2>
             </div>
             
-            <div className="overflow-x-auto">
+            {/* Mobile Card View */}
+            <div className="block lg:hidden">
+              {bookings.map((booking) => (
+                <div key={booking.id} className="p-4 border-b border-white/10 hover:bg-white/5 transition-colors">
+                  <div className="flex justify-between items-start mb-3">
+                    <div>
+                      <h3 className="text-white font-medium">{booking.name}</h3>
+                      <p className="text-gray-400 text-sm">{booking.contact}</p>
+                      <p className="text-gray-400 text-sm">{booking.service}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-green-400 font-bold">₹{Math.round(booking.amount || 999)}</p>
+                      <p className="text-gray-400 text-sm">{booking.date}</p>
+                    </div>
+                  </div>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    <span className={`px-2 py-1 rounded text-xs font-medium border ${getStatusColor(booking.status)}`}>
+                      {booking.status}
+                    </span>
+                    <span className={`px-2 py-1 rounded text-xs font-medium border ${getPaymentColor(booking.payment)}`}>
+                      {booking.payment}
+                    </span>
+                  </div>
+                  <div className="flex flex-wrap gap-2">
+                    <button 
+                      onClick={() => {
+                        setSelectedBooking(booking);
+                        setShowViewModal(true);
+                      }}
+                      className="px-2 py-1 bg-blue-600/20 text-blue-300 hover:bg-blue-600/30 rounded text-xs font-medium border border-blue-500/30"
+                    >
+                      View
+                    </button>
+                    <button 
+                      onClick={() => {
+                        setSelectedBooking(booking);
+                        setFormData({
+                          name: booking.name,
+                          contact: booking.contact,
+                          email: booking.email,
+                          service: booking.service,
+                          date: (booking as any).dateTime ? new Date((booking as any).dateTime).toISOString().split('T')[0] : booking.date,
+                          time: (booking as any).dateTime ? new Date((booking as any).dateTime).toTimeString().split(':').slice(0,2).join(':') : booking.time,
+                          photoUrl: (booking as any).photoUrl || '',
+                          status: booking.status,
+                          payment: booking.payment,
+                          amount: booking.amount
+                        });
+                        setShowEditForm(true);
+                      }}
+                      className="px-2 py-1 bg-yellow-600/20 text-yellow-300 hover:bg-yellow-600/30 rounded text-xs font-medium border border-yellow-500/30"
+                    >
+                      Edit
+                    </button>
+                    <button 
+                      onClick={() => {
+                        if (confirm('Are you sure you want to delete this booking?')) {
+                          fetch(`/api/bookings/${booking.id}`, { method: 'DELETE' })
+                          .then(() => fetchBookings())
+                          .catch(() => alert('Error deleting booking'));
+                        }
+                      }}
+                      className="px-2 py-1 bg-red-600/20 text-red-300 hover:bg-red-600/30 rounded text-xs font-medium border border-red-500/30"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+            
+            {/* Desktop Table View */}
+            <div className="hidden lg:block overflow-x-auto">
               <table className="w-full">
                 <thead className="bg-white/5">
                   <tr>
@@ -404,8 +476,10 @@ export default function BookingsPage() {
                  
                 </tbody>
               </table>
+            </div>
               
-              {/* Individual Booking Actions */}
+            {/* Individual Booking Actions - Desktop Only */}
+            <div className="hidden lg:block">
               {bookings.map((booking) => (
                 <div key={`actions-${booking.id}`} className="p-4 border-t border-white/10 bg-white/5">
                   <div className="flex items-center justify-between mb-3">
@@ -476,7 +550,7 @@ export default function BookingsPage() {
       {/* Create Booking Modal */}
       {showCreateForm && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-4 sm:p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Create New Booking</h2>
             
             <form className="space-y-4">
@@ -695,7 +769,7 @@ export default function BookingsPage() {
       {/* View Booking Modal */}
       {showViewModal && selectedBooking && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-4 sm:p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Booking Details</h2>
             
             <div className="space-y-4">
@@ -766,7 +840,7 @@ export default function BookingsPage() {
       {/* Edit Booking Modal */}
       {showEditForm && selectedBooking && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-4 sm:p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Edit Booking</h2>
             
             <form className="space-y-4">
@@ -864,7 +938,7 @@ export default function BookingsPage() {
       {/* Payment Modal */}
       {showPaymentModal && selectedBooking && (
         <div className="fixed inset-0 bg-black/50 z-50 flex items-center justify-center p-4">
-          <div className="bg-gray-900 rounded-2xl p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
+          <div className="bg-gray-900 rounded-2xl p-4 sm:p-8 max-w-lg w-full border border-white/20 max-h-[90vh] overflow-y-auto">
             <h2 className="text-2xl font-bold text-white mb-6">Payment Management</h2>
             
             <div className="space-y-6">

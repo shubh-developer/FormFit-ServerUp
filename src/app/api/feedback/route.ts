@@ -227,6 +227,34 @@ export async function GET() {
   try {
     console.log('Fetching feedback from database...');
     
+    // First check if feedback table exists
+    const tableCheck = await query(`
+      SELECT EXISTS (
+        SELECT FROM information_schema.tables 
+        WHERE table_schema = 'public' 
+        AND table_name = 'feedback'
+      )
+    `);
+    
+    if (!tableCheck.rows[0].exists) {
+      console.log('Feedback table does not exist, creating it...');
+      await query(`
+        CREATE TABLE IF NOT EXISTS feedback (
+          id SERIAL PRIMARY KEY,
+          name VARCHAR(255),
+          rating INTEGER CHECK (rating >= 1 AND rating <= 5),
+          comment TEXT,
+          booking_id INTEGER,
+          client_email VARCHAR(255),
+          client_phone VARCHAR(15),
+          ip_address VARCHAR(45),
+          user_agent TEXT,
+          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+          updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        )
+      `);
+    }
+    
     // Fetch all feedback from database with booking information
     const result = await query(`
       SELECT 

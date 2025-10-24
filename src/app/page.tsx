@@ -7,6 +7,7 @@ import { Clock, MapPin, Star, Shield, Users, Award, ArrowDown } from 'lucide-rea
 import { useQuery } from '@tanstack/react-query';
 import { useEffect, useState } from 'react';
 import SimpleReviewModal from '@/components/SimpleReviewModal';
+import DiscountCarousel from '@/components/DiscountCarousel';
 
 export default function Home() {
   const [scrollY, setScrollY] = useState(0);
@@ -240,6 +241,9 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Discount Carousel */}
+      <DiscountCarousel />
+
       {/* Combined Background for Chapters 2 & 3 */}
       <div style={{backgroundImage: 'url(/images/dark_wallpaper.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
         {/* Chapter 2: Our Journey */}
@@ -270,7 +274,7 @@ export default function Home() {
             ].map((item, index) => (
               <div 
                 key={index}
-                className={`group text-center p-8 rounded-2xl bg-white shadow-lg hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-4 border border-gray-100 animate-fade-in-up min-h-[280px] w-full max-w-md mx-auto`}
+                className={`group text-center p-8 rounded-2xl bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm shadow-2xl hover:shadow-2xl transition-all duration-700 transform hover:-translate-y-4 border border-orange-500/30 hover:animate-rgb-glow hover:animate-border-glow animate-fade-in-up min-h-[280px] w-full max-w-md mx-auto`}
                 style={{ 
                   animationDelay: `${index * 200}ms`,
                   opacity: scrollY > 600 ? 1 : 0,
@@ -286,8 +290,8 @@ export default function Home() {
                 }`}>
                   <item.icon className="w-10 h-10 text-white" />
                 </div>
-                <h3 className="text-xl font-bold text-[#2C3E50] mb-4 group-hover:text-[#2980B9] transition-colors">{item.title === 'Certified Professional Trainer' ? 'Certified Professional Trainer 💪' : item.title}</h3>
-                <p className="text-gray-600 leading-relaxed">{item.desc}</p>
+                <h3 className="text-xl font-bold text-white mb-4 group-hover:text-orange-300 transition-colors">{item.title === 'Certified Professional Trainer' ? 'Certified Professional Trainer 💪' : item.title}</h3>
+                <p className="text-gray-300 leading-relaxed group-hover:text-gray-200 transition-colors">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -303,7 +307,7 @@ export default function Home() {
             ].map((item, index) => (
               <div 
                 key={index}
-                className={`text-center p-4 rounded-2xl bg-white shadow-lg border border-gray-100 min-h-[250px] ${index === 4 ? 'col-span-2 max-w-sm mx-auto' : ''}`}
+                className={`text-center p-4 rounded-2xl bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm shadow-2xl border border-orange-500/30 hover:animate-rgb-glow hover:animate-border-glow min-h-[250px] ${index === 4 ? 'col-span-2 max-w-sm mx-auto' : ''}`}
               >
                 <div className={`w-12 h-12 rounded-2xl flex items-center justify-center mx-auto mb-3 ${
                   item.color === '[#00BCD4]' ? 'bg-gradient-to-br from-cyan-400 to-cyan-600' :
@@ -313,8 +317,8 @@ export default function Home() {
                 }`}>
                   <item.icon className="w-6 h-6 text-white" />
                 </div>
-                <h3 className="text-sm font-bold text-[#2C3E50] mb-2">{item.title === 'Certified Professional Trainer' ? 'Certified Professional Trainer 💪' : item.title}</h3>
-                <p className="text-gray-600 text-xs leading-relaxed">{item.desc}</p>
+                <h3 className="text-sm font-bold text-white mb-2">{item.title === 'Certified Professional Trainer' ? 'Certified Professional Trainer 💪' : item.title}</h3>
+                <p className="text-gray-300 text-xs leading-relaxed">{item.desc}</p>
               </div>
             ))}
           </div>
@@ -342,7 +346,7 @@ export default function Home() {
           {recentFeedback && recentFeedback.length > 0 ? (
             <div className="hidden md:grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-0">
               {recentFeedback.slice(0, 3).map((feedback) => (
-              <div key={feedback.id} className="group bg-white/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-white/20 p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto md:max-w-none">
+              <div key={feedback.id} className="group bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-orange-500/30 hover:animate-rgb-glow hover:animate-border-glow p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto md:max-w-none">
                 <div className="flex items-center justify-between mb-6">
                   <div className="flex space-x-1">
                     {[...Array(5)].map((_, i) => (
@@ -362,20 +366,20 @@ export default function Home() {
                     {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
                   </span>
                 </div>
-                <blockquote className={`text-[#2C3E50] mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base md:text-lg italic font-medium ${
+                <blockquote className={`text-white mb-4 sm:mb-6 leading-relaxed text-sm sm:text-base md:text-lg italic font-medium ${
                   feedback.comment.length > 100 ? 'max-h-24 overflow-y-auto scrollbar-hide' : ''
                 }`}>
                   &quot;{feedback.comment}&quot;
                 </blockquote>
-                <div className="flex items-center pt-3 sm:pt-4 border-t border-gray-100">
+                <div className="flex items-center pt-3 sm:pt-4 border-t border-orange-500/30">
                   <div className="w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 bg-gradient-to-br from-[#2980B9] to-[#2ECC71] rounded-full flex items-center justify-center mr-3 sm:mr-4 shadow-lg flex-shrink-0">
                     <span className="text-white font-bold text-sm sm:text-base md:text-xl">
                       {feedback.name.charAt(0).toUpperCase()}
                     </span>
                   </div>
                   <div className="flex-1 min-w-0">
-                    <p className="font-bold text-[#2C3E50] text-sm sm:text-base md:text-lg truncate">{feedback.name}</p>
-                    <p className="text-gray-500 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center">
+                    <p className="font-bold text-white text-sm sm:text-base md:text-lg truncate">{feedback.name}</p>
+                    <p className="text-gray-300 text-xs sm:text-sm flex flex-col sm:flex-row sm:items-center">
                       <span className="mr-0 sm:mr-2">✓ Verified Customer</span>
                       <span className="hidden sm:inline">•</span>
                       <span className="sm:ml-2">{new Date(feedback.created_at).toLocaleDateString('en-IN')}</span>
@@ -420,7 +424,7 @@ export default function Home() {
                 return (
                   <div 
                     key={feedback.id} 
-                    className="absolute w-full bg-gradient-to-br from-white to-gray-50 rounded-3xl shadow-2xl border border-gray-100 p-6 transition-all duration-500 ease-out left-1/2 top-1/2"
+                    className="absolute w-full bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-3xl shadow-2xl border border-orange-500/30 p-6 transition-all duration-500 ease-out left-1/2 top-1/2"
                     style={{
                       transform: `translate(-50%, -50%) translateX(${position * 15}px) translateY(${position * 15}px) scale(${1 - Math.abs(position) * 0.08}) rotateZ(${position * 2}deg)`,
                       zIndex: 10 - Math.abs(position),
@@ -448,24 +452,24 @@ export default function Home() {
                         {feedback.rating >= 4 ? '⭐ EXCELLENT' : feedback.rating >= 3 ? '👍 GOOD' : '📝 NEEDS IMPROVEMENT'}
                       </span>
                     </div>
-                    <blockquote className={`text-gray-700 mb-6 leading-relaxed text-base italic font-medium relative ${
+                    <blockquote className={`text-white mb-6 leading-relaxed text-base italic font-medium relative ${
                       feedback.comment.length > 100 ? 'max-h-32 overflow-y-auto scrollbar-hide' : ''
                     }`}>
-                      <span className="text-4xl text-gray-300 absolute -top-2 -left-2 z-10">&ldquo;</span>
+                      <span className="text-4xl text-orange-400/50 absolute -top-2 -left-2 z-10">&ldquo;</span>
                       <div className="pl-6 pr-6">
                         {feedback.comment}
                       </div>
-                      <span className="text-4xl text-gray-300 absolute -bottom-4 -right-2 z-10">&rdquo;</span>
+                      <span className="text-4xl text-orange-400/50 absolute -bottom-4 -right-2 z-10">&rdquo;</span>
                     </blockquote>
-                    <div className="flex items-center pt-4 border-t border-gray-200">
+                    <div className="flex items-center pt-4 border-t border-orange-500/30">
                       <div className="w-12 h-12 bg-gradient-to-br from-blue-500 to-emerald-500 rounded-full flex items-center justify-center mr-4 shadow-lg flex-shrink-0">
                         <span className="text-white font-bold text-lg">
                           {feedback.name.charAt(0).toUpperCase()}
                         </span>
                       </div>
                       <div className="flex-1 min-w-0">
-                        <p className="font-bold text-gray-800 text-base truncate">{feedback.name}</p>
-                        <p className="text-gray-500 text-sm flex items-center">
+                        <p className="font-bold text-white text-base truncate">{feedback.name}</p>
+                        <p className="text-gray-300 text-sm flex items-center">
                           <span className="inline-flex items-center mr-3">
                             <span className="w-2 h-2 bg-green-500 rounded-full mr-1"></span>
                             Verified Customer
@@ -1022,17 +1026,15 @@ export default function Home() {
                 />
                 <div className="absolute inset-0 bg-gradient-to-br from-[#26A69A]/10 to-[#1565C0]/10"></div>
               </div>
-              <div className="relative text-center">
-                <div className="w-32 h-32 bg-black rounded-full mx-auto mb-6 flex items-center justify-center border-4 border-orange-500 shadow-lg p-4">
-                  <Image
-                    src="/images/forma-fit-logo.png"
-                    alt="FormaFit Logo"
-                    width={96}
-                    height={96}
-                    className="w-full h-full object-contain rounded-full"
-                  />
-                </div>
-                <h3 className="text-2xl font-bold text-white mb-2">Therapeutic Massage & Personal Fitness Training</h3>
+              <div className="relative text-center flex flex-col items-center">
+                <Image
+                  src="/images/formafit_logo.png"
+                  alt="FormaFit Logo"
+                  width={192}
+                  height={192}
+                  className="w-48 h-48 object-contain"
+                />
+                <h3 className="text-2xl font-bold text-white mb-2 -mt-9">Therapeutic Massage & Personal Fitness Training</h3>
                 <p className="text-white mb-4">{THERAPIST_INFO.specialization}</p>
                 <div className="flex justify-center space-x-1 mb-4">
                   {[...Array(5)].map((_, i) => (

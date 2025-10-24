@@ -4,7 +4,19 @@ import { useState, useEffect } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { z } from 'zod';
-import DatePicker from 'react-datepicker';
+import dynamic from 'next/dynamic';
+
+const DatePicker = dynamic(() => import('react-datepicker'), {
+  ssr: false,
+  loading: () => (
+    <input
+      type="text"
+      placeholder="Select date and time"
+      className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
+      readOnly
+    />
+  )
+});
 import { phoneSchema, nameSchema, addressSchema, emailSchema } from '@/lib/validation';
 import 'react-datepicker/dist/react-datepicker.css';
 import { Clock, User, MessageSquare, AlertTriangle } from 'lucide-react';
@@ -163,7 +175,7 @@ const BookingForm = () => {
       <div className="bg-white/10 backdrop-blur-xl rounded-3xl shadow-2xl border border-white/10 p-8">
         <h2 className="text-3xl font-light text-white mb-6 text-center tracking-wide">Book Your Appointment</h2>
         
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-8" suppressHydrationWarning>
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
             {/* Left Column */}
             <div className="space-y-8">
@@ -183,6 +195,7 @@ const BookingForm = () => {
                     {...register('name')}
                     className="w-full px-4 py-3 border-2 border-white/20 rounded-xl focus:ring-2 focus:ring-amber-400 focus:border-amber-400 bg-white/10 backdrop-blur-sm text-white placeholder-gray-300 font-medium"
                     placeholder="Enter your full name"
+                    suppressHydrationWarning
                   />
                   {errors.name && (
                     <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
@@ -203,6 +216,7 @@ const BookingForm = () => {
                     }}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     placeholder="Enter your 10-digit phone number"
+                    suppressHydrationWarning
                   />
                   {errors.contact && (
                     <p className="text-red-500 text-sm mt-1">{errors.contact.message}</p>
@@ -218,6 +232,7 @@ const BookingForm = () => {
                     {...register('email')}
                     className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium"
                     placeholder="Enter your email address"
+                    suppressHydrationWarning
                   />
                   {errors.email && (
                     <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
@@ -261,6 +276,7 @@ const BookingForm = () => {
                     <select
                       {...register('bloodGroup')}
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 font-medium"
+                      suppressHydrationWarning
                     >
                       <option value="">Select Blood Group</option>
                       <option value="A+">A+</option>
@@ -290,6 +306,7 @@ const BookingForm = () => {
                       max="250"
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 font-medium"
                       placeholder="Enter height in cm"
+                      suppressHydrationWarning
                     />
                     {errors.height && (
                       <p className="text-red-500 text-sm mt-1">{errors.height.message}</p>
@@ -307,6 +324,7 @@ const BookingForm = () => {
                       max="200"
                       className="w-full px-4 py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 font-medium"
                       placeholder="Enter weight in kg"
+                      suppressHydrationWarning
                     />
                     {errors.weight && (
                       <p className="text-red-500 text-sm mt-1">{errors.weight.message}</p>
@@ -349,6 +367,7 @@ const BookingForm = () => {
                         backgroundSize: '1.5em 1.5em',
                         paddingRight: '2.5rem'
                       }}
+                      suppressHydrationWarning
                     >
                       {SERVICES.map((service) => (
                         <option key={service.id} value={service.id}>
@@ -385,6 +404,7 @@ const BookingForm = () => {
                       backgroundSize: '1.5em 1.5em',
                       paddingRight: '2.5rem'
                     }}
+                    suppressHydrationWarning
                   >
                     {OILS.map((oil) => (
                       <option key={oil.id} value={oil.id}>
@@ -577,6 +597,7 @@ const BookingForm = () => {
             disabled={createBookingMutation.isPending}
             data-track="booking"
             className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            suppressHydrationWarning
           >
             {createBookingMutation.isPending ? (
               <LoadingSpinner text="Booking..." />

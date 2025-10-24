@@ -83,11 +83,11 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center hover:scale-105 transition-transform">
               <Image
-                src="/images/forma-fit-logo.png"
+                src="/images/formafit_transparent_logo.png"
                 alt="FormaFit Logo"
-                width={400}
-                height={48}
-                className="h-16 w-auto rounded-xl object-cover shadow-lg"
+                width={600}
+                height={150}
+                className="h-37 w-auto object-contain"
                 priority
               />
             </Link>
@@ -118,11 +118,11 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center hover:scale-105 transition-transform">
             <Image
-              src="/images/forma-fit-logo.png"
+              src="/images/formafit_transparent_logo.png"
               alt="FormaFit Logo"
-              width={400}
-              height={48}
-              className="h-18 w-auto rounded-xl object-cover shadow-lg"
+              width={600}
+              height={150}
+              className="h-37 w-auto object-contain"
               priority
             />
           </Link>

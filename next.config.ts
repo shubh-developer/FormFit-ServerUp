@@ -1,6 +1,11 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Image configuration
+  images: {
+    domains: ['images.unsplash.com', 'burst.shopifycdn.com', 'img.freepik.com', 'encrypted-tbn0.gstatic.com', 'cdn-ilbapaf.nitrocdn.com'],
+  },
+  
   // Ignore ESLint errors during build
   eslint: {
     ignoreDuringBuilds: true,

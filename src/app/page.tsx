@@ -1028,7 +1028,7 @@ export default function Home() {
               </div>
               <div className="relative text-center flex flex-col items-center">
                 <Image
-                  src="/images/formafit_logo.png"
+                  src="/images/Formafit_logo/formafit_logo.png"
                   alt="FormaFit Logo"
                   width={192}
                   height={192}

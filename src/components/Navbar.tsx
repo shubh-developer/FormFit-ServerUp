@@ -83,7 +83,7 @@ const Navbar = () => {
           <div className="flex justify-between items-center h-20">
             <Link href="/" className="flex items-center hover:scale-105 transition-transform">
               <Image
-                src="/images/formafit_transparent_logo.png"
+                src="/images/Formafit_logo/formafit_transparent_logo.png"
                 alt="FormaFit Logo"
                 width={600}
                 height={150}
@@ -118,7 +118,7 @@ const Navbar = () => {
         <div className="flex justify-between items-center h-16">
           <Link href="/" className="flex items-center hover:scale-105 transition-transform">
             <Image
-              src="/images/formafit_transparent_logo.png"
+              src="/images/Formafit_logo/formafit_transparent_logo.png"
               alt="FormaFit Logo"
               width={600}
               height={150}
@@ -255,7 +255,7 @@ const Navbar = () => {
               <div className="flex items-center justify-between p-5 border-b border-white/10">
                 <div className="flex items-center space-x-3">
                   <div className="w-9 h-9 rounded-full overflow-hidden shadow-lg">
-                    <img src="/images/Forma_3.png" alt="FormaFit Logo" className="w-full h-full object-cover" />
+                    <img src="/images/Formafit_logo/Forma_3.png" alt="FormaFit Logo" className="w-full h-full object-cover" />
                   </div>
                   <div>
                     <h3 className="font-bold text-white text-lg tracking-wide">FormaFit</h3>

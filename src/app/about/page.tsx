@@ -26,7 +26,7 @@ export default function AboutPage() {
             <div className="text-center">
               <div className="w-48 h-48 mx-auto mb-6 flex items-center justify-center overflow-visible">
                 <img 
-                  src="/images/formafit_logo.png" 
+                  src="/images/Formafit_logo/formafit_logo.png" 
                   alt="FormaFit Logo" 
                   className=" mt-30 w-72 h-72 object-contain rounded-full"
                 />

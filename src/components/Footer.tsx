@@ -12,7 +12,7 @@ const Footer = () => {
             <div className="inline-flex items-center mb-1">
               <div className="h-20">
                 <Image
-                  src="/images/formafit_logo.png"
+                  src="/images/Formafit_logo/formafit_logo.png"
                   alt="FormaFit Logo"
                   width={80}
                   height={80}

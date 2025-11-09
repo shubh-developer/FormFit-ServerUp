@@ -8,10 +8,20 @@ import { User, Phone, MessageSquare, Send } from 'lucide-react';
 import { useAppStore } from '@/lib/store';
 
 const inquirySchema = z.object({
-  name: z.string().min(2, 'Name must be at least 2 characters'),
+  name: z.string().min(2, 'Name must be at least 2 characters').max(20, 'Name must be at most 20 characters').regex(/^[a-zA-Z\s]+$/, 'Name can only contain letters and spaces'),
   phone: z.string().regex(/^[0-9]{10}$/, 'Please enter a valid 10-digit phone number'),
   email: z.string().email('Please enter a valid email address').optional(),
+  location: z.string().min(1, 'Please select a location'),
+  customLocation: z.string().optional(),
   message: z.string().min(10, 'Message must be at least 10 characters'),
+}).refine((data) => {
+  if (data.location === 'Other' && (!data.customLocation || data.customLocation.trim().length === 0)) {
+    return false;
+  }
+  return true;
+}, {
+  message: 'Please enter your location',
+  path: ['customLocation'],
 });
 
 type InquiryFormData = z.infer<typeof inquirySchema>;
@@ -24,9 +34,12 @@ const InquiryForm = () => {
     handleSubmit,
     formState: { errors },
     reset,
+    watch,
   } = useForm<InquiryFormData>({
     resolver: zodResolver(inquirySchema),
   });
+
+  const selectedLocation = watch('location');
 
   const onSubmit = async (data: InquiryFormData) => {
     setLoading(true);
@@ -58,7 +71,7 @@ const InquiryForm = () => {
   };
 
   return (
-    <div className="max-w-full sm:max-w-2xl mx-auto p-2 sm:p-6" suppressHydrationWarning>
+    <div className="max-w-full sm:max-w-2xl lg:max-w-4xl xl:max-w-5xl mx-auto p-2 sm:p-6" suppressHydrationWarning>
       <div className="bg-white/90 backdrop-blur-sm rounded-lg shadow-lg p-8 sm:p-8 border border-white/20">
         <h2 className="text-2xl font-bold text-gray-900 mb-4 sm:mb-6">Contact Us</h2>
         <p className="text-gray-600 mb-4 sm:mb-6 hidden sm:block">
@@ -72,58 +85,102 @@ const InquiryForm = () => {
               <User className="w-5 h-5 mr-2" />
               Your Information
             </h3>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Full Name *
-              </label>
-              <input
-                type="text"
-                {...register('name')}
-                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
-                placeholder="Enter your full name"
-                suppressHydrationWarning
-              />
-              {errors.name && (
-                <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
-              )}
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Full Name *
+                </label>
+                <input
+                  type="text"
+                  {...register('name')}
+                  maxLength={40}
+                  onInput={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    target.value = target.value.replace(/[^a-zA-Z\s]/g, '');
+                  }}
+                  className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
+                  placeholder="Enter your full name"
+                  suppressHydrationWarning
+                />
+                {errors.name && (
+                  <p className="text-red-500 text-sm mt-1">{errors.name.message}</p>
+                )}
+              </div>
+
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Phone Number *
+                </label>
+                <input
+                  type="tel"
+                  {...register('phone')}
+                  maxLength={10}
+                  onInput={(e) => {
+                    const target = e.target as HTMLInputElement;
+                    target.value = target.value.replace(/[^0-9]/g, '').slice(0, 10);
+                  }}
+                  className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
+                  placeholder="Enter your 10-digit phone number"
+                  suppressHydrationWarning
+                />
+                {errors.phone && (
+                  <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
+                )}
+              </div>
             </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Phone Number *
-              </label>
-              <input
-                type="tel"
-                {...register('phone')}
-                maxLength={10}
-                onInput={(e) => {
-                  const target = e.target as HTMLInputElement;
-                  target.value = target.value.replace(/[^0-9]/g, '').slice(0, 10);
-                }}
-                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
-                placeholder="Enter your 10-digit phone number"
-                suppressHydrationWarning
-              />
-              {errors.phone && (
-                <p className="text-red-500 text-sm mt-1">{errors.phone.message}</p>
-              )}
-            </div>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Email Address (Optional)
+                </label>
+                <input
+                  type="email"
+                  {...register('email')}
+                  className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
+                  placeholder="Enter your email address"
+                  suppressHydrationWarning
+                />
+                {errors.email && (
+                  <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
+                )}
+              </div>
 
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Email Address (Optional)
-              </label>
-              <input
-                type="email"
-                {...register('email')}
-                className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
-                placeholder="Enter your email address"
-                suppressHydrationWarning
-              />
-              {errors.email && (
-                <p className="text-red-500 text-sm mt-1">{errors.email.message}</p>
-              )}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Location *
+                </label>
+                <select
+                  {...register('location')}
+                  className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 font-medium text-lg sm:text-base"
+                  suppressHydrationWarning
+                >
+                  <option value="">Select your location</option>
+                  <option value="Pune">Pune</option>
+                  <option value="Mumbai">Mumbai</option>
+                  <option value="Hyderabad">Hyderabad</option>
+                  <option value="Other">Other</option>
+                </select>
+                {errors.location && (
+                  <p className="text-red-500 text-sm mt-1">{errors.location.message}</p>
+                )}
+
+                {selectedLocation === 'Other' && (
+                  <div className="mt-2">
+                    <input
+                      type="text"
+                      {...register('customLocation')}
+                      className="w-full px-6 py-5 sm:py-3 border-2 border-gray-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white text-gray-900 placeholder-gray-500 font-medium text-lg sm:text-base"
+                      placeholder="Enter your City"
+                      suppressHydrationWarning
+                    />
+                    {errors.customLocation && (
+                      <p className="text-red-500 text-sm mt-1">{errors.customLocation.message}</p>
+                    )}
+                  </div>
+                )}
+              </div>
             </div>
           </div>
 

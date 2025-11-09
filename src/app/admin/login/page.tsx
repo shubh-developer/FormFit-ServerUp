@@ -56,10 +56,7 @@ export default function AdminLoginPage() {
       if (result.success) {
         // Store admin session
         adminSession.setToken(result.token);
-        adminSession.setUser({
-          username: data.username,
-          loggedInAt: new Date().toISOString(),
-        });
+        adminSession.setUser(result.user);
         
         // Redirect to intended page or admin dashboard
         router.push(redirectTo);

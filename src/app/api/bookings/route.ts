@@ -155,7 +155,7 @@ export async function POST(request: NextRequest) {
       // Send confirmation email
       try {
         console.log('📧 Attempting to send email to:', newBooking.email);
-        const emailResponse = await fetch(`${process.env.NEXTAUTH_URL || 'http://localhost:3000'}/api/notifications/email`, {
+        const emailResponse = await fetch(`/api/notifications/email`, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify({

@@ -84,8 +84,8 @@ export async function POST(request: NextRequest) {
     const hashedPassword = hashPassword(password);
 
     await query(`
-      INSERT INTO admin_users (username, password_hash, email, full_name, contact_number, address, photo_url, pan_card, aadhar_card, role, is_active)
-      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, true)
+      INSERT INTO admin_users (username, password_hash, email, full_name, contact_number, address, photo_url, pan_card, aadhar_card, role, is_active, updated_at)
+      VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, true, CURRENT_TIMESTAMP)
     `, [sanitizedData.username, hashedPassword, sanitizedData.email, sanitizedData.fullName, sanitizedData.contactNumber, sanitizedData.address, sanitizedData.photoUrl, sanitizedData.panCard, sanitizedData.aadharCard, sanitizedData.role]);
 
     return NextResponse.json({

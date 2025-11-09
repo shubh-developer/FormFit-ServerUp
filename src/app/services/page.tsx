@@ -39,12 +39,18 @@ export default function ServicesPage() {
             const isExpanded = expandedRows[rowIndex];
             
             return (
-              <div key={service.id} className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-xl shadow-2xl border border-orange-500/30 overflow-hidden hover:animate-rgb-glow hover:animate-border-glow hover:scale-105 transition-all duration-500 flex flex-col h-full group animate-fade-in-up" style={{animationDelay: `${index * 100}ms`}}>
+              
+              <div key={service.id} className="bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-xl shadow-2xl border border-orange-500/30 overflow-hidden hover:animate-rgb-glow hover:animate-border-glow hover:scale-105 transition-all duration-500 flex flex-col h-full group animate-fade-in-up relative" style={{animationDelay: `${index * 100}ms`}}>
+
+
                 <div className="p-3 md:p-6 flex-1 flex flex-col">
-                  <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-3 md:mb-4">
+                  <div className="flex flex-col md:flex-row md:justify-between md:items-start mb-3 md:mb-4 ">
                     <h3 className="text-lg md:text-2xl font-bold text-white mb-2 md:mb-0 leading-tight group-hover:text-orange-300 transition-colors duration-300">{service.name}</h3>
                     <div className="text-left md:text-right">
                       <div className="text-2xl md:text-3xl font-bold bg-gradient-to-r from-orange-500 to-red-500 bg-clip-text text-transparent">₹{service.price}</div>
+                      {service.originalPrice && (
+                        <div className="text-lg md:text-xl text-gray-500 line-through font-semibold">₹{service.originalPrice}</div>
+                      )}
                       <div className="text-xs md:text-sm text-gray-400 flex items-center whitespace-nowrap group-hover:text-gray-300 transition-colors duration-300">
                         <Clock className="w-3 h-3 md:w-4 md:h-4 mr-1" />
                         {service.duration}

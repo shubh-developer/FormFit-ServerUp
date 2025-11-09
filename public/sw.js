@@ -12,8 +12,9 @@ const urlsToCache = [
   '/disclaimer',
   '/success',
   '/inquiry',
-  '/static/css/app.css',
-  '/static/js/app.js'
+  '/favicon.ico',
+  '/favicon.png',
+  '/sw.js'
 ];
 
 // Install event

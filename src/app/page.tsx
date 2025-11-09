@@ -71,20 +71,22 @@ export default function Home() {
       try {
         const response = await fetch('/api/feedback');
         const result = await response.json();
-        
+
         if (result.success && result.feedback) {
           // Sort by created_at and return latest 6
           return result.feedback
-            .sort((a, b) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
+            .sort((a: any, b: any) => new Date(b.created_at).getTime() - new Date(a.created_at).getTime())
             .slice(0, 6);
         }
         return [];
       } catch (error) {
         console.error('Error fetching reviews:', error);
+        // Return empty array on error for graceful degradation
         return [];
       }
     },
     refetchInterval: 30000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 
   const handleReviewSubmit = async (reviewData: any) => {
@@ -249,7 +251,7 @@ export default function Home() {
         {/* Chapter 2: Our Journey */}
         <section className="story-section min-h-screen flex items-center py-10 pb-5 relative overflow-hidden">
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-16" style={{ transform: `translateY(${Math.max(0, (scrollY - 800) * 0.1)}px)` }}>
+          <div className="text-center mb-32" style={{ transform: `translateY(${Math.max(0, (scrollY - 800) * 0.1)}px)` }}>
             <div className="inline-block mb-4">
               <span className="text-sm font-medium text-white bg-white/20 px-4 py-2 rounded-full">
                 Chapter 2: Our Journey
@@ -343,7 +345,7 @@ export default function Home() {
             </p>
           </div>
           
-          {recentFeedback && recentFeedback.length > 0 ? (
+          {Array.isArray(recentFeedback) && recentFeedback.length > 0 ? (
             <div className="hidden md:grid grid-cols-1 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 md:gap-8 px-4 sm:px-0">
               {recentFeedback.slice(0, 3).map((feedback) => (
               <div key={feedback.id} className="group bg-gradient-to-br from-gray-900/95 to-black/95 backdrop-blur-sm rounded-2xl shadow-xl hover:shadow-2xl transition-all duration-500 transform hover:-translate-y-2 border border-orange-500/30 hover:animate-rgb-glow hover:animate-border-glow p-4 sm:p-6 md:p-8 w-full max-w-md mx-auto md:max-w-none">
@@ -419,7 +421,7 @@ export default function Home() {
                 }
               }}
             >
-              {recentFeedback && recentFeedback.length > 0 ? recentFeedback.map((feedback, index) => {
+              {Array.isArray(recentFeedback) && recentFeedback.length > 0 ? recentFeedback.map((feedback: any, index: number) => {
                 const position = index - currentReviewIndex;
                 return (
                   <div 
@@ -513,7 +515,7 @@ export default function Home() {
       </div>
 
       {/* Combined Background for Gallery & Meet Your Therapist */}
-      <div className="relative" style={{backgroundImage: 'url(/images/abovefooter_.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
+      <div className="relative" style={{backgroundImage: 'url(/images/dark_wallpaper.jpg)', backgroundSize: 'cover', backgroundPosition: 'center'}}>
         <div className="absolute inset-0" style={{background: 'linear-gradient(135deg, rgba(63, 63, 63, 1), rgba(0, 0, 0, 1))'}}></div>
         
         {/* Gallery Section */}
@@ -757,9 +759,9 @@ export default function Home() {
               <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(5) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Outdoor Workouts */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
-                  <img 
-                    src="https://cdn-ilbapaf.nitrocdn.com/ZmMiMYiblsIwVjzNuftoXuWhTPTuQyyC/assets/images/optimized/rev-9e6f186/wod.guru/wp-content/uploads/2025/01/7Outdoor-Workout-Ideas-to-Keep-Your-Gym-Offer-Interesting-1024x640.jpg" 
-                    alt="Outdoor workout activities" 
+                  <img
+                    src="/images/pair-gloves-boxing-sport.jpg"
+                    alt="Outdoor workout activities"
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -770,9 +772,9 @@ export default function Home() {
                 </div>
                 {/* Back side - Premium Equipment */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-                  <img 
-                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                    alt="Spa accessories" 
+                  <img
+                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Spa accessories"
                     className="w-full h-64 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -887,9 +889,9 @@ export default function Home() {
               <div className="relative w-full h-64 transition-transform duration-700 group-hover:rotate-y-180" style={{ transformStyle: 'preserve-3d', transform: `${flippedCards.has(8) ? 'rotateY(180deg)' : ''}` }}>
                 {/* Front side - Outdoor Workouts */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden' }}>
-                  <img 
-                    src="https://cdn-ilbapaf.nitrocdn.com/ZmMiMYiblsIwVjzNuftoXuWhTPTuQyyC/assets/images/optimized/rev-9e6f186/wod.guru/wp-content/uploads/2025/01/7Outdoor-Workout-Ideas-to-Keep-Your-Gym-Offer-Interesting-1024x640.jpg" 
-                    alt="Outdoor workout activities" 
+                  <img
+                    src="/images/pair-gloves-boxing-sport.jpg"
+                    alt="Outdoor workout activities"
                     className="w-full h-64 object-cover group-hover:scale-110 transition-transform duration-300"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
@@ -900,9 +902,9 @@ export default function Home() {
                 </div>
                 {/* Back side - Premium Equipment */}
                 <div className="absolute inset-0" style={{ backfaceVisibility: 'hidden', transform: 'rotateY(180deg)' }}>
-                  <img 
-                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" 
-                    alt="Spa accessories" 
+                  <img
+                    src="https://images.unsplash.com/photo-1540555700478-4be289fbecef?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80"
+                    alt="Spa accessories"
                     className="w-full h-64 object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>

@@ -4,9 +4,10 @@ import nodemailer from 'nodemailer';
 const transporter = nodemailer.createTransport({
   host: process.env.SMTP_HOST || 'smtp.gmail.com',
   port: parseInt(process.env.SMTP_PORT || '587'),
-  secure: process.env.SMTP_SECURE === 'true',
+  secure: false,
+  requireTLS: true,
   auth: {
-    user: process.env.SMTP_USER || process.env.EMAIL_USER || 'your-email@gmail.com',
+    user: process.env.SMTP_USER || process.env.EMAIL_USER || 'formafit503@gmail.com',
     pass: process.env.SMTP_PASS || process.env.EMAIL_PASS || 'your-app-password',
   },
 });
@@ -24,6 +25,14 @@ interface BookingEmailData {
 
 export async function sendBookingConfirmation(to: string, bookingData: any): Promise<boolean> {
   try {
+    console.log('📧 Starting email sending process...');
+    console.log('Email configuration:', {
+      host: process.env.SMTP_HOST,
+      port: process.env.SMTP_PORT,
+      secure: process.env.SMTP_SECURE === 'true',
+      user: process.env.SMTP_USER,
+    });
+    
     const mailOptions = {
       from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || 'formafit503@gmail.com',
       to: to,
@@ -120,10 +129,27 @@ export async function sendBookingConfirmation(to: string, bookingData: any): Pro
       `,
     };
 
-    await transporter.sendMail(mailOptions);
+    console.log('📧 Attempting to send email with options:', {
+      to: mailOptions.to,
+      from: mailOptions.from,
+      subject: mailOptions.subject
+    });
+    
+    const info = await transporter.sendMail(mailOptions);
+    console.log('✅ Email sent successfully:', {
+      messageId: info.messageId,
+      response: info.response
+    });
     return true;
   } catch (error) {
     console.error('❌ Error sending booking confirmation email:', error);
+    if (error instanceof Error) {
+      console.error('Error details:', {
+        name: error.name,
+        message: error.message,
+        stack: error.stack
+      });
+    }
     return false;
   }
 }
@@ -131,7 +157,7 @@ export async function sendBookingConfirmation(to: string, bookingData: any): Pro
 export async function sendBookingConfirmationOld(booking: any, serviceName: string, oilName: string): Promise<boolean> {
   try {
     const mailOptions = {
-      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'your-email@gmail.com',
+      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'formafit503@gmail.com',
       to: booking.email,
       subject: '🎉 Booking Confirmation - FormaFit',
       html: `
@@ -243,10 +269,10 @@ export async function sendBookingConfirmationOld(booking: any, serviceName: stri
 
 export async function sendAdminNotification(booking: any): Promise<boolean> {
   try {
-    const adminEmail = process.env.ADMIN_EMAIL || 'admin@formafit.com';
+    const adminEmail = process.env.ADMIN_EMAIL || 'formafit503@gmail.com';
     
     const mailOptions = {
-      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'your-email@gmail.com',
+      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'formafit503@gmail.com',
       to: adminEmail,
       subject: '🆕 New Booking Received - FormaFit',
       html: `
@@ -342,7 +368,7 @@ export async function sendBookingStatusUpdate(booking: any, newStatus: string, s
     }
 
     const mailOptions = {
-      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'your-email@gmail.com',
+      from: process.env.DEFAULT_FROM_EMAIL || process.env.SMTP_USER || process.env.EMAIL_USER || 'formafit503@gmail.com',
       to: booking.email,
       subject: subject,
       html: emailContent,

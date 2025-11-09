@@ -55,7 +55,7 @@ const Footer = () => {
                   </div>
                   <div className="flex items-center space-x-2">
                     <Mail size={16} className="text-orange-400" strokeWidth={3} style={{width: '24px', height: '15px', minWidth: '24px'}} />
-                    <span className="text-gray-300">admin@formafit.co.in</span>
+                    <span className="text-gray-300">formafit503@gmail.com</span>
                   </div>
                   <div className="flex items-center space-x-2">
                     <MapPin size={16} className="text-orange-400" strokeWidth={2} />
@@ -93,7 +93,7 @@ const Footer = () => {
         {/* Mobile/Tablet Bottom Section */}
         <div className="lg:hidden border-t border-orange-500/30 mt-2 pt-2">
           <div className="text-center space-y-2">
-            <p className="text-gray-400 text-xs">
+            <p className="text-gray-400 text-sm">
               © 2025 FormaFit. All rights reserved.
             </p>
             <div className="flex flex-wrap justify-center space-x-3">
@@ -113,7 +113,7 @@ const Footer = () => {
         {/* Bottom Bar - Desktop Only */}
         <div className="hidden lg:block border-t border-orange-500/30 mt-1 pt-1">
           <div className="flex flex-col lg:flex-row justify-between items-center">
-            <p className="text-gray-400 text-xs">
+            <p className="text-gray-400 text-sm">
               © 2025 FormaFit. All rights reserved.
             </p>
             <div className="flex flex-col lg:flex-row space-y-1 lg:space-y-0 lg:space-x-6 mt-2 lg:mt-0">

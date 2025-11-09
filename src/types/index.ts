@@ -90,6 +90,7 @@ export interface Service {
   name: string;
   duration: string;
   price: number;
+  originalPrice?: number;
   description: string;
   benefits: string[];
 }

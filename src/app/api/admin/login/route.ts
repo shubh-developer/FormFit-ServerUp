@@ -11,6 +11,9 @@ const loginSchema = z.object({
 
 const loginAttempts = new Map<string, { count: number; resetTime: number }>();
 
+// Clear rate limits on server restart
+loginAttempts.clear();
+
 function checkLoginRateLimit(identifier: string, limit: number = 5, windowMs: number = 300000): boolean {
   const now = Date.now();
   const record = loginAttempts.get(identifier);
@@ -40,33 +43,56 @@ export async function POST(request: NextRequest) {
     const clientIP = request.headers.get('x-forwarded-for') || 'unknown';
     const userAgent = request.headers.get('user-agent') || 'unknown';
     
-    if (!checkLoginRateLimit(`admin_login_${clientIP}`, 5, 300000)) {
-      console.log(`[SECURITY] Admin login rate limit exceeded for IP: ${clientIP}`);
-      return NextResponse.json({
-        success: false,
-        message: 'Too many login attempts. Please try again later.',
-      }, { status: 429 });
+    // Rate limiting temporarily disabled
+    // if (!checkLoginRateLimit(`admin_login_${clientIP}`, 5, 300000)) {
+    //   console.log(`[SECURITY] Admin login rate limit exceeded for IP: ${clientIP}`);
+    //   return NextResponse.json({
+    //     success: false,
+    //     message: 'Too many login attempts. Please try again later.',
+    //   }, { status: 429 });
+    // }
+
+    // Try database authentication first
+    let admin = null;
+    try {
+      const hashedPassword = hashPassword(validatedData.password);
+      const result = await query(
+        'SELECT id, username, full_name, email, role FROM admin_users WHERE username = $1 AND password_hash = $2 AND is_active = true',
+        [validatedData.username, hashedPassword]
+      );
+      
+      if (result.rows.length > 0) {
+        admin = result.rows[0];
+        // Update last login
+        await query('UPDATE admin_users SET last_login = CURRENT_TIMESTAMP WHERE id = $1', [admin.id]);
+      }
+    } catch (dbError) {
+      console.error('Database authentication error:', dbError);
     }
 
-    // Fallback authentication (database not available)
-    const adminUsername = process.env.ADMIN_USERNAME || 'admin';
-    const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
-    
-    if (validatedData.username !== adminUsername || validatedData.password !== adminPassword) {
+    // Fallback to static credentials if database auth fails
+    if (!admin) {
+      const adminUsername = process.env.ADMIN_USERNAME || 'admin';
+      const adminPassword = process.env.ADMIN_PASSWORD || 'admin123';
+      
+      if (validatedData.username === adminUsername && validatedData.password === adminPassword) {
+        admin = {
+          id: 1,
+          username: adminUsername,
+          full_name: 'Administrator',
+          email: 'admin@formafit.com',
+          role: 'admin'
+        };
+      }
+    }
+
+    if (!admin) {
       console.log(`[SECURITY] Failed admin login attempt - Username: ${validatedData.username}, IP: ${clientIP}`);
       return NextResponse.json({
         success: false,
         message: 'Invalid credentials',
       }, { status: 401 });
     }
-
-    const admin = {
-      id: 1,
-      username: adminUsername,
-      full_name: 'Administrator',
-      email: 'admin@formafit.com',
-      role: 'admin'
-    };
 
     const jwtSecret = process.env.JWT_SECRET || 'your-super-secret-jwt-key-change-in-production-min-32-chars';
     const token = sign(

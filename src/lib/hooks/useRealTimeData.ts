@@ -21,48 +21,90 @@ export interface DashboardData {
 
 // API functions
 const fetchDashboardData = async (): Promise<DashboardData> => {
-  const response = await fetch('/api/dashboard');
-  if (!response.ok) {
-    throw new Error('Failed to fetch dashboard data');
+  try {
+    const response = await fetch('/api/dashboard');
+    if (!response.ok) {
+      throw new Error('Failed to fetch dashboard data');
+    }
+    const data = await response.json();
+    return data.data;
+  } catch (error) {
+    console.error('Dashboard data fetch error:', error);
+    // Return default empty data structure for graceful degradation
+    return {
+      statistics: {
+        totalBookings: 0,
+        todayBookings: 0,
+        pendingBookings: 0,
+        totalInquiries: 0,
+        todayInquiries: 0,
+        totalFeedback: 0,
+        averageRating: '0.0',
+      },
+      recentBookings: [],
+      recentInquiries: [],
+      recentFeedback: [],
+      serviceDistribution: [],
+      monthlyTrends: [],
+      lastUpdated: new Date().toISOString(),
+    };
   }
-  const data = await response.json();
-  return data.data;
 };
 
 const fetchBookings = async (): Promise<any[]> => {
-  const response = await fetch('/api/bookings');
-  if (!response.ok) {
-    throw new Error('Failed to fetch bookings');
+  try {
+    const response = await fetch('/api/bookings');
+    if (!response.ok) {
+      throw new Error('Failed to fetch bookings');
+    }
+    const data = await response.json();
+    return data.bookings;
+  } catch (error) {
+    console.error('Bookings fetch error:', error);
+    return [];
   }
-  const data = await response.json();
-  return data.bookings;
 };
 
 const fetchInquiries = async (): Promise<any[]> => {
-  const response = await fetch('/api/inquiries');
-  if (!response.ok) {
-    throw new Error('Failed to fetch inquiries');
+  try {
+    const response = await fetch('/api/inquiries');
+    if (!response.ok) {
+      throw new Error('Failed to fetch inquiries');
+    }
+    const data = await response.json();
+    return data.inquiries;
+  } catch (error) {
+    console.error('Inquiries fetch error:', error);
+    return [];
   }
-  const data = await response.json();
-  return data.inquiries;
 };
 
 const fetchFeedback = async (): Promise<any[]> => {
-  const response = await fetch('/api/feedback');
-  if (!response.ok) {
-    throw new Error('Failed to fetch feedback');
+  try {
+    const response = await fetch('/api/feedback');
+    if (!response.ok) {
+      throw new Error('Failed to fetch feedback');
+    }
+    const data = await response.json();
+    return data.feedback;
+  } catch (error) {
+    console.error('Feedback fetch error:', error);
+    return [];
   }
-  const data = await response.json();
-  return data.feedback;
 };
 
 const fetchPackages = async (): Promise<any[]> => {
-  const response = await fetch('/api/packages');
-  if (!response.ok) {
-    throw new Error('Failed to fetch packages');
+  try {
+    const response = await fetch('/api/packages');
+    if (!response.ok) {
+      throw new Error('Failed to fetch packages');
+    }
+    const data = await response.json();
+    return data.packages;
+  } catch (error) {
+    console.error('Packages fetch error:', error);
+    return [];
   }
-  const data = await response.json();
-  return data.packages;
 };
 
 // Custom hooks for real-time data
@@ -73,6 +115,7 @@ export function useDashboardData(refreshInterval = 30000) {
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
     staleTime: 10000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 }
 
@@ -83,6 +126,7 @@ export function useBookings(refreshInterval = 30000) {
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
     staleTime: 10000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 }
 
@@ -93,6 +137,7 @@ export function useInquiries(refreshInterval = 30000) {
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
     staleTime: 10000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 }
 
@@ -103,6 +148,7 @@ export function useFeedback(refreshInterval = 30000) {
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
     staleTime: 10000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 }
 
@@ -113,6 +159,7 @@ export function usePackages(refreshInterval = 300000) {
     refetchInterval: refreshInterval,
     refetchIntervalInBackground: true,
     staleTime: 300000,
+    retry: false, // Don't retry on failure to avoid console spam
   });
 }
 

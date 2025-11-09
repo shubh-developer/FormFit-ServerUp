@@ -13,7 +13,7 @@ export async function PATCH(
   { params }: { params: { id: string } }
 ) {
   try {
-    const bookingId = params.id;
+    const bookingId = (await params).id;
     const body = await request.json();
     
     // Validate the request body
@@ -114,7 +114,7 @@ export async function GET(
   { params }: { params: { id: string } }
 ) {
   try {
-    const bookingId = params.id;
+    const bookingId = (await params).id;
     
     // Get booking status and feedback eligibility
     const result = await query(`

@@ -7,6 +7,7 @@ export const SERVICES: Service[] = [
     name: 'Full Body Massage',
     duration: '60 mins',
     price: 999,
+    originalPrice: Math.round(999 * 1.25),
     description: 'Complete body relaxation and rejuvenation therapy',
     benefits: [
       'Relieves full body tension',
@@ -21,6 +22,7 @@ export const SERVICES: Service[] = [
     name: 'Upper Body Massage',
     duration: '30 mins',
     price: 499,
+    originalPrice: Math.round(499 * 1.25),
     description: 'Focused therapy for neck, shoulders, arms, and back',
     benefits: [
       'Relieves neck and shoulder pain',
@@ -35,6 +37,7 @@ export const SERVICES: Service[] = [
     name: 'Lower Body Massage',
     duration: '30 mins',
     price: 599,
+    originalPrice: Math.round(599 * 1.25),
     description: 'Therapeutic massage for legs, feet, and lower back',
     benefits: [
       'Relieves leg fatigue',
@@ -49,6 +52,7 @@ export const SERVICES: Service[] = [
     name: 'Head Massage',
     duration: '15-20 mins',
     price: 299,
+    originalPrice: Math.round(299 * 1.25),
     description: 'Soothing scalp and head massage for instant relief',
     benefits: [
       'Relieves headaches',
@@ -63,6 +67,7 @@ export const SERVICES: Service[] = [
     name: 'Injury-Specific Therapy',
     duration: 'Custom',
     price: 799,
+    originalPrice: Math.round(799 * 1.25),
     description: 'Specialized therapy for specific injuries and pain areas',
     benefits: [
       'Targeted pain relief',
@@ -77,6 +82,7 @@ export const SERVICES: Service[] = [
     name: 'Full Body Stretching',
     duration: '45 mins',
     price: 499,
+    originalPrice: Math.round(499 * 1.25),
     description: 'Comprehensive stretching therapy for improved flexibility and mobility',
     benefits: [
       'Improves flexibility and range of motion',
@@ -91,6 +97,7 @@ export const SERVICES: Service[] = [
     name: 'Personal Training',
     duration: '60 mins',
     price: 1299,
+    originalPrice: Math.round(1299 * 1.25),
     description: 'One-on-one fitness training tailored to your goals and fitness level',
     benefits: [
       'Customized workout plans',
@@ -105,6 +112,7 @@ export const SERVICES: Service[] = [
     name: 'Strength Training',
     duration: '45 mins',
     price: 999,
+    originalPrice: Math.round(999 * 1.25),
     description: 'Build muscle strength and endurance with targeted resistance exercises',
     benefits: [
       'Increases muscle mass',
@@ -119,6 +127,7 @@ export const SERVICES: Service[] = [
     name: 'Cardio Fitness',
     duration: '45 mins',
     price: 799,
+    originalPrice: Math.round(799 * 1.25),
     description: 'High-energy cardiovascular workouts to improve heart health and stamina',
     benefits: [
       'Improves cardiovascular health',
@@ -133,6 +142,7 @@ export const SERVICES: Service[] = [
     name: 'Flexibility & Mobility',
     duration: '30 mins',
     price: 599,
+    originalPrice: Math.round(599 * 1.25),
     description: 'Stretching and mobility exercises to improve flexibility and range of motion',
     benefits: [
       'Improves flexibility',
@@ -147,6 +157,7 @@ export const SERVICES: Service[] = [
     name: 'Weight Loss Program',
     duration: '60 mins',
     price: 1499,
+    originalPrice: Math.round(1499 * 1.25),
     description: 'Comprehensive fitness program designed for effective and sustainable weight loss',
     benefits: [
       'Structured weight loss plan',
@@ -161,6 +172,7 @@ export const SERVICES: Service[] = [
     name: 'Functional Training',
     duration: '45 mins',
     price: 899,
+    originalPrice: Math.round(899 * 1.25),
     description: 'Real-world movement patterns to improve daily life activities and sports performance',
     benefits: [
       'Improves daily activities',
@@ -175,6 +187,7 @@ export const SERVICES: Service[] = [
     name: 'Muscle Gain Program',
     duration: '60 mins',
     price: 1399,
+    originalPrice: Math.round(1399 * 1.25),
     description: 'Specialized training program focused on building lean muscle mass and strength',
     benefits: [
       'Targeted muscle building',
